@@ -1,0 +1,26 @@
+{{>header}}
+<header>
+    <h1 class="text-center">Página de inicio</h1>
+</header>
+
+<div id="cosas">
+    
+</div>
+
+<script>
+$(() => {
+    $.ajax({
+        method: 'get',
+        url: '/cosas',
+        dataType: 'json',
+        success: (data) => {
+            $("#cosas").append(data.results[0].collection);
+            console.log(data.results[0].collection);
+        },
+        error: (error) => {
+            alert("Hubo un error... ¿wtf?")
+        }
+    })
+})
+</script>
+{{>footer}}

@@ -44,32 +44,17 @@ app.get('/', async (req, res) => {
     });
 });
 
-app.get('/cosas', async (req, res) => {
-    let cosas = db.collection('cosas');
-    res.send(await cosas.list());
-});
-
-app.post('/cosas', async (req, res) => {
-    let cosas = db.collection('cosas');
-    let objeto1 = await cosas.set('objeto1', {
-        tipo: 'cosa'
-    });
-    res.send(objeto1);
-});
-
 app.get('/ultimas', (req, res) => {
     let finanzas =  db.collection("finanzas");
     finanzas.list().then((data) => {
         Promise.all(data.results.map(async (finanza) => {
             const item = await finanzas.get(finanza.key);
-            console.log(item);
             return {
                 id: finanza.key,
-                fecha: item.props.fecha,
+                tipo: item.props.tipo,
                 monto: item.props.monto,
                 persona: item.props.persona,
-                descripcion: item.props.descripcion,
-                tipo: item.props.tipo
+                descripcion: item.props.descripcion
             }
         })).then((data) => {
             res.json({
@@ -83,9 +68,23 @@ app.get('/finanzas', async (req, res) => {
     
 });
 
-app.post('/finanzas', async (req, res) => {
+app.get('/finanza', async (req, res) => {
+    const id = req.query.id;
+    const finanzas =  db.collection("finanzas");
+    const finanza = await finanzas.get(id);
+    res.json({
+        id: finanza.key,
+        tipo: finanza.props.tipo,
+        monto: finanza.props.monto,
+        fecha: finanza.props.fecha,
+        persona: finanza.props.persona,
+        descripcion: finanza.props.descripcion,
+        fijo: finanza.props.fijo
+    });
+});
+
+app.post('/finanza', async (req, res) => {
     let datos = req.body;
-    console.log(datos);
     
     const id = v4().slice(0,8);
     let finanzas = db.collection('finanzas');
@@ -94,10 +93,10 @@ app.post('/finanzas', async (req, res) => {
     res.json(datos);
 });
 
-app.put('/finanzas', async (req, res) => {
+app.put('/finanza', async (req, res) => {
     
 });
 
-app.delete('/finanzas', async (req, res) => {
+app.delete('/finanza', async (req, res) => {
     
 });

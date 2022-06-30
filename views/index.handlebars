@@ -9,41 +9,60 @@
         <button class="btn btn-outline-success" type="button" data-bs-toggle="modal" data-bs-target="#nuevaModal">Nueva finanza</button>
     </div>
     
-    <div class="modal fade" id="nuevaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="nuevaModal" tabindex="-1" aria-labelledby="nuevaModalLabel" aria-hidden="true">
         <div class="modal-dialog">
         <div class="modal-content">
         <form>
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Nueva finanza</h5>
+                <h5 class="modal-title" id="nuevaModalLabel">Nueva finanza</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <label for="id-fecha" class="form-label">Fecha</label>
-                    <input type="date" name="fecha" id="id-fecha" class="form-control" required>
+                <div class="row">
+                    <div class="mb-3 col-6">
+                        <label for="id-fecha" class="form-label">Fecha</label>
+                        <input type="date" name="fecha" id="id-fecha" class="form-control" required>
+                    </div>
+                    <div class="mb-3 col-6">
+                        <label for="id-tipo" class="form-label">Tipo de finanza</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="tipo" id="id-gasto" value="egreso" checked>
+                            <label class="form-check-label" for="id-gasto">
+                                Gasto
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="tipo" id="id-ingreso" value="ingreso">
+                            <label class="form-check-label" for="id-ingreso">
+                                Ingreso
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="id-monto" class="form-label">Monto</label>
-                    <input type="number" name="monto" id="id-monto" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="id-nombre" class="form-label">Usuario/a</label>
-                    <input type="text" name="persona" id="id-nombre" class="form-control" required>
+                <div class="row">
+                    <div class="mb-3 col-4">
+                        <label for="id-monto" class="form-label">Monto</label>
+                        <input type="number" name="monto" id="id-monto" class="form-control" required>
+                    </div>
+                    <div class="mb-3 col-8">
+                        <label for="id-nombre" class="form-label">Usuario/a</label>
+                        <input type="text" name="persona" id="id-nombre" class="form-control" required>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="id-descripcion" class="form-label">Descripción</label>
                     <input type="text" name="descripcion" id="id-descripcion" class="form-control" required>
                 </div>
                 <div class="mb-3">
-                    <label for="id-tipo" class="form-label">Tipo de gasto</label>
+                    <label for="id-tipo" class="form-label">Tipo de ingreso/gasto</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="tipo" id="id-nofijo" value="nofijo" checked>
+                        <input class="form-check-input" type="radio" name="fijo" id="id-nofijo" value="nofijo" checked>
                         <label class="form-check-label" for="id-nofijo">
                             No fijo
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="tipo" id="id-fijo" value="fijo">
+                        <input class="form-check-input" type="radio" name="fijo" id="id-fijo" value="fijo">
                         <label class="form-check-label" for="id-fijo">
                             Fijo
                         </label>
@@ -65,6 +84,7 @@
         <table class="table table-success table-striped table-hover">
             <thead>
                 <tr>
+                    <th scope="col">Tipo</th>
                     <th scope="col">Monto</th>
                     <th scope="col">Persona</th>
                     <th scope="col">Descripción</th>
@@ -74,10 +94,11 @@
             <tbody>
                 {{#each lista}}
                 <tr data-id="{{this.id}}">
+                    <td>{{this.tipo}}</td>
                     <td>{{this.monto}}</td>
                     <td>{{this.persona}}</td>
                     <td>{{this.descripcion}}</td>
-                    <td><button class="btn btn-info">Detalles</button></td>
+                    <td><button class="btn btn-info btn-detalles" data-bs-toggle="modal" data-bs-target="#modal-detalles">Detalles</button></td>
                 </tr>
                 {{/each}}
             </tbody>
@@ -85,22 +106,58 @@
     </div>
 </section>
 
+<section id="detalles">
+    <div class="modal fade" id="modal-detalles" tabindex="-1" aria-labelledby="detallesModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detallesModalLabel">Detalles</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-secondary table-hover">
+                        <tbody>
+                            <tr>
+                                <th scope="row">ID</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Tipo</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Monto</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Fecha</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Persona</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Fijo/No fijo</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Descripción</th>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <script>
 $(() => {
-    /*$.ajax({
-        method: 'get',
-        url: '/cosas',
-        dataType: 'json',
-        success: (data) => {
-            $("#cosas").append(data.results[0].collection);
-            console.log(data.results[0].collection);
-        },
-        error: (error) => {
-            alert("Hubo un error... ¿wtf?")
-        }
-    });
-    */
-    
     $('form').submit(function(event){
         event.preventDefault();
         
@@ -111,7 +168,7 @@ $(() => {
         
         $.ajax({
             method: 'post',
-            url: '/finanzas',
+            url: '/finanza',
             contentType: 'application/json',
             data: JSON.stringify(datos),
             dataType: 'json',
@@ -123,7 +180,22 @@ $(() => {
                 alert("Ha ocurrido un error")
             }
         });
-    })
+    });
+    
+    $('#ultimas .btn-detalles').click(function(){
+        const id = $($(this).parents('tr')[0]).data('id');
+        
+        $.get('/finanza', {id: id}, function(data){
+            let detalles = $('#modal-detalles .modal-body td');
+            $(detalles[0]).text(data.id);
+            $(detalles[1]).text(data.tipo);
+            $(detalles[2]).text(data.monto);
+            $(detalles[3]).text(data.fecha);
+            $(detalles[4]).text(data.persona);
+            $(detalles[5]).text(data.fijo);
+            $(detalles[6]).text(data.descripcion);
+        }, 'json');
+    });
 })
 </script>
 {{>footer}}

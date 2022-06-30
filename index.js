@@ -58,7 +58,7 @@ app.get('/ultimas', (req, res) => {
             }
         })).then((data) => {
             res.json({
-                results: data
+                results: data.slice(0,8)
             })
         })
     })

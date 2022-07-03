@@ -184,6 +184,7 @@ $(() => {
     
     $('#ultimas .btn-detalles').click(function(){
         const id = $($(this).parents('tr')[0]).data('id');
+        $('#modal-detalles .modal-body td').text("");
         
         $.get('/finanza', {id: id}, function(data){
             let detalles = $('#modal-detalles .modal-body td');

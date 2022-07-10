@@ -173,8 +173,7 @@ $(() => {
             data: JSON.stringify(datos),
             dataType: 'json',
             success: (response) => {
-                alert("Nuevo movimiento agregado correctamente");
-                console.log(response);
+                window.location.reload();
             },
             error: (error) => {
                 alert("Ha ocurrido un error")
@@ -195,7 +194,10 @@ $(() => {
             $(detalles[4]).text(data.persona);
             $(detalles[5]).text(data.fijo);
             $(detalles[6]).text(data.descripcion);
-        }, 'json');
+        }, 'json')
+        .fail(function(){
+            alert("Ha ocurrido un error");
+        });
     });
 })
 </script>

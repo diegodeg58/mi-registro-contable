@@ -1,0 +1,53 @@
+{{>header}}
+<header>
+    <h1 class="text-center">Registro</h1>
+</header>
+
+<section id="registro"><form><div class="container">
+    <div class="row row-cols-1 row-cols-sm-2">
+        <div class="col mb-3">
+            <label for="id-nombre" class="form-label">Nombre</label>
+            <input type="text" name="nombre" id="id-nombre" class="form-control">
+        </div>
+        <div class="col mb-3">
+            <label for="id-apellido" class="form-label">Apellido</label>
+            <input type="text" name="apellido" id="id-apellido" class="form-control">
+        </div>
+        <div class="col mb-3">
+            <label for="id-telefono" class="form-label">Teléfono móvil</label>
+            <input type="number" name="telefono" id="id-telefono" class="form-control">
+        </div>
+        <div class="col mb-3">
+            <label for="id-email" class="form-label">E-mail</label>
+            <input type="email" name="email" id="id-email" class="form-control">
+        </div>
+    </div>
+    <input type="submit" value="Registrar" class="btn btn-outline-primary">
+</div></form></section>
+
+<script>
+$(() => {
+    $('form').submit({"obj": $('form')},(event) => {
+        event.preventDefault();
+        const data = event.data.obj.serializeArray().reduce((obj, item) => {
+            return Object.assign(obj, { [item.name]: item.value})
+        }, {});
+        
+        $.post({
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            dataType: 'json',
+            url: '/registro'
+        })
+        .done((data, text) => {
+            console.log(data, text)
+            //window.location.replace('/')
+        })
+        .fail((obj, text, errortext) => {
+            console.log(errortext);
+        })
+    })
+})
+</script>
+
+{{>footer}}

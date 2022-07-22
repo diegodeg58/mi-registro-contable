@@ -8,6 +8,7 @@ const axios = require('axios').default;
 const moment = require('moment');
 const {v4} = require('uuid');
 const _ = require('lodash');
+const jwt = require('jsonwebtoken');
 
 app.use(express.json());
 app.use('/', express.static(`${__dirname}/assets/css`));
@@ -15,6 +16,8 @@ app.use('/assets/js', express.static(`${__dirname}/node_modules/store/dist`));
 
 const port = process.env.PORT || 3000;
 const url = process.env.BASE_URL || `http://localhost:${port}`;
+const privateKey = process.env.privateKey;
+
 app.listen(port, console.log(`Servidor activo en puerto ${port}`));
 
 app.set("view engine", "handlebars");
@@ -26,23 +29,47 @@ app.engine(
     })
 );
 
-/* app.use('/', (req, res, next) => {
-    
-}) */
-
 app.get('/', async (req, res) => {
     let lista;
-    await axios.get(`${url}/ultimas`).then((data) => {
-        lista = data.data.results;
-    })
-    .catch((error) => {
-        console.error("Error en la petición:", error.code);
-    });
-
+    const token = req.query.token;
+    if(req.headers.cookie) console.log((req.headers.cookie).split('=')[1]);
+    if(!token){
+        //TODO: Inicio de sesión
+    }else{
+        await axios.get(`${url}/ultimas`).then((data) => {
+            lista = data.data.results;
+        })
+        .catch((error) => {
+            console.error("Error obteniendo la lista:", error.code);
+            lista = undefined;
+        });
+    }
+    
     res.render("index", {
         layout: "index",
-        lista: lista
+        lista
     });
+});
+
+app.post('/login', (req, res) => {
+    const { usuario, password } = req.body;
+    if(usuario == 'user' && password == 'pass'){
+        const token = jwt.sign({usuario, password}, privateKey);
+        return res.cookie('token', token).json({token})
+    }
+    return res.status(401).json({error: "No autorizado"});
+});
+
+app.get('/registro', (req, res) => {
+    res.render("registro", {
+        layout: "registro",
+    });
+});
+
+app.post('/registro', (req, res) => {
+    res.statusMessage = req.body.nombre;
+    console.log(req.body.nombre);
+    res.status(401).json(req.body.nombre);
 });
 
 app.get('/movimientos', (req, res) => {

@@ -29,4 +29,15 @@ const ObtenerUltimas = async (tabla) => {
     }
 }
 
-module.exports = { ObtenerUltimas }
+const GetRegistros = async () => {
+    const registros = db.collection("registros");
+    try {
+        let lista = await registros.list();
+        return lista;
+    } catch (error) {
+        console.error(error.message);
+        return null;
+    }
+}
+
+module.exports = { ObtenerUltimas, GetRegistros }

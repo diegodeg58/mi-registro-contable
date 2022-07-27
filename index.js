@@ -9,8 +9,10 @@ const moment = require('moment');
 const {v4} = require('uuid');
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
 app.use(express.json());
+app.use(cookieParser());
 app.use('/', express.static(`${__dirname}/assets/css`));
 app.use('/assets/js', express.static(`${__dirname}/node_modules/store/dist`));
 
@@ -30,7 +32,9 @@ app.engine(
 );
 
 app.get('/', async (req, res) => {
+    console.log(req.cookies);
     let lista;
+    /*
     const token = req.query.token;
     if(req.headers.cookie) console.log((req.headers.cookie).split('=')[1]);
     if(!token){
@@ -44,7 +48,8 @@ app.get('/', async (req, res) => {
             lista = undefined;
         });
     }
-    
+    */
+    //res.cookie("name", Date.now());
     res.render("index", {
         layout: "index",
         lista
@@ -52,6 +57,7 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/login', (req, res) => {
+    //TODO: Obtener registro de usuario
     const { usuario, password } = req.body;
     if(usuario == 'user' && password == 'pass'){
         const token = jwt.sign({usuario, password}, privateKey);
@@ -67,6 +73,8 @@ app.get('/registro', (req, res) => {
 });
 
 app.post('/registro', (req, res) => {
+    //TODO: Obtener de la lista de registros si el email aparece registrado
+    
     res.statusMessage = req.body.nombre;
     console.log(req.body.nombre);
     res.status(401).json(req.body.nombre);

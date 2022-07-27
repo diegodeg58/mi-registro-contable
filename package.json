@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
+    "cookie-parser": "^1.4.6",
     "cyclic-dynamodb": "0.0.26",
     "express": "^4.18.1",
     "express-handlebars": "^6.0.6",

@@ -1,10 +1,49 @@
-<header>
-  <h1 class="text-center">Inicio de sesión</h1>
-</header>
+<head>
+  <title>Inicia sesión en MPRC</title>
+</head>
 
-<form>
-  <label for="user">Nombre de usuario</label>
-  <input type="text" name="user" id="user">
-  <label for="password">Contraseña</label>
-  <input type="password" name="password" id="password">
-</form>
+<div class="d-flex flex-column justify-content-center" style="height: 100vh;">
+  <div>
+    <header>
+      <h1 class="text-center">Inicio de sesión</h1>
+    </header>
+
+    <div class="col-8 col-md-6 col-xl-4 col-xxl-3 m-auto">
+      <form id="login" class="mb-2">
+        <div class="mb-3">
+          <label class="form-label" for="user">Nombre de usuario</label>
+          <input class="form-control" type="text" name="user" id="user" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="password">Contraseña</label>
+          <input class="form-control" type="password" name="password" id="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Ingresar</button>
+      </form>
+      <p>
+        <a href="/register" class="
+        link-info 
+        link-offset-2 
+        link-underline-opacity-25 
+        link-underline-opacity-100-hover">Si no tienes una cuenta, crea una aquí</a>
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  $('#login').on('submit', (event) => {
+    event.preventDefault();
+    const data = $('#login').serializeArray().reduce((json, { name, value }) => {
+      json[name] = value;
+      return json;
+    }, {});
+
+    $.post({
+      url: '/login',
+      contentType: 'application/json',
+      data: JSON.stringify(data)
+    });
+  })
+</script>

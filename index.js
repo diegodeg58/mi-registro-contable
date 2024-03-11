@@ -1,11 +1,11 @@
-//Express y handlebars
+//Express, handlebars y cookie-parser
 const express = require('express');
-const app = express();
 const hbs = require('express-handlebars');
+const cookieParser = require('cookie-parser');
 
 //DynamoDB
-const CyclicDb = require("@cyclic.sh/dynamodb")
-const db = CyclicDb("important-blue-wrapCyclicDB")
+const CyclicDB = require("@diegodeg58/cyclic.sh-dynamodb");
+const db = CyclicDB("important-blue-wrapCyclicDB");
 
 //Utilidades
 const axios = require('axios').default;
@@ -13,7 +13,12 @@ const moment = require('moment');
 const { v4 } = require('uuid');
 const _ = require('lodash');
 
+//Base de datos
+const { DB } = require(`${__dirname}/model/script.js`)
+
+const app = express();
 app.use(express.json()); //Para CRUD con JSON
+app.use(cookieParser()); //Para cookies
 app.use('/', express.static(`${__dirname}/assets/css`));
 app.use('/store', express.static(`${__dirname}/node_modules/store/dist`));
 app.use('/bootstrap', express.static(`${__dirname}/node_modules/bootstrap/dist`));
@@ -21,7 +26,7 @@ app.use('/jquery', express.static(`${__dirname}/node_modules/jquery/dist`));
 
 const port = process.env.PORT || 3000;
 const url = process.env.BASE_URL || `http://localhost:${port}`;
-app.listen(port, console.log(`Servidor activo en puerto ${port}`));
+app.listen(port, console.log(`Servidor activo en: ${url}`));
 
 app.set("view engine", "hbs");
 app.engine(
@@ -30,7 +35,7 @@ app.engine(
     layoutsDir: `${__dirname}/views/layouts`,
     partialsDir: `${__dirname}/views/partials`,
     extname: 'hbs',
-    defaultLayout: 'index'
+    defaultLayout: 'main'
   })
 );
 
@@ -38,19 +43,33 @@ app.engine(
     
 }) */
 
-app.get('/', async (req, res) => {
-  let lista;
-  await axios.get(`${url}/ultimas`).then((data) => {
-    lista = data.data.results;
-  })
-    .catch((error) => {
+app.get('/', (req, res) => {
+    axios.get(`${url}/ultimas`)
+  .then((data) => {
+      res.render("index", {
+        lista: data.data.results
+      });
+    }).catch((error) => {
       console.error("Error en la petición:", error.code);
+      res.sendStatus(500);
     });
-
-  res.render("main", {
-    lista
-  });
 });
+
+app.get('/login', (req, res) => {
+  res.render('login');
+})
+
+app.post('/login', (req, res) => {
+  //TODO: Hacer validaciones y chequear BD para crear un JWT
+})
+
+app.get('/register', (req, res) => {
+  res.render('register');
+})
+
+app.post('/register', (req, res) => {
+  //TODO: Hacer validaciones, chequear existencia de usuario e email
+})
 
 app.get('/movimientos', (req, res) => {
 

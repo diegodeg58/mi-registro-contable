@@ -1,16 +1,19 @@
-//Express, handlebars y cookie-parser
+//Dependencias de express
 const express = require('express');
 const hbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
 
+//Variables de entorno
+require('dotenv').config()
+
 //Rutas
 const routes = require("./routes/routes.js");
-const __node_modules = `${__dirname}/node_modules`;
 
 const app = express();
 app.use(express.json()); //Para CRUD con JSON
 app.use(cookieParser()); //Para cookies
 
+const __node_modules = `${__dirname}/node_modules`;
 app.use("/assets/js",
   express.static(`${__node_modules}/store/dist`),
   express.static(`${__node_modules}/bootstrap/dist/js`),

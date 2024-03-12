@@ -3,10 +3,12 @@ const axios = require('axios').default;
 const moment = require('moment');
 const { v4 } = require('uuid');
 const _ = require('lodash');
+const jwt = require('jsonwebtoken');
 
 //Modelo de base de datos
 const DB = require("../model/model.js");
 
+const privateKey = process.env.privateKey;
 const port = process.env.PORT || 3000;
 const url = process.env.BASE_URL || `http://localhost:${port}`;
 

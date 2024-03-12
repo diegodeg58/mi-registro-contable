@@ -1,6 +1,6 @@
 //DynamoDB
 const CyclicDB = require("@diegodeg58/cyclic.sh-dynamodb");
-const db = CyclicDB("important-blue-wrapCyclicDB");
+const db = CyclicDB(process.env.CYCLIC_DB);
 
 const tabla = 'finanzas';
 const finanzas = db.collection(tabla);

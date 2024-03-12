@@ -5,14 +5,20 @@ const cookieParser = require('cookie-parser');
 
 //Rutas
 const routes = require("./routes/routes.js");
+const __node_modules = `${__dirname}/node_modules`;
 
 const app = express();
 app.use(express.json()); //Para CRUD con JSON
 app.use(cookieParser()); //Para cookies
-app.use(express.static(`${__dirname}/assets/css`));
-app.use('/store', express.static(`${__dirname}/node_modules/store/dist`));
-app.use('/bootstrap', express.static(`${__dirname}/node_modules/bootstrap/dist`));
-app.use('/jquery', express.static(`${__dirname}/node_modules/jquery/dist`));
+
+app.use("/assets/js",
+  express.static(`${__node_modules}/store/dist`),
+  express.static(`${__node_modules}/bootstrap/dist/js`),
+  express.static(`${__node_modules}/jquery/dist`)
+  )
+app.use("/assets/css",
+  express.static(`${__dirname}/assets/css`),
+  express.static(`${__node_modules}/bootstrap/dist/css`))
 
 const port = process.env.PORT || 3000;
 const url = process.env.BASE_URL || `http://localhost:${port}`;

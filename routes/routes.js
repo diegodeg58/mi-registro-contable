@@ -18,18 +18,21 @@ const {
 
 app.get('/', getIndex);
 
-app.get('/login', getLogin)
-app.post('/login', postLogin)
+app.route('/login')
+  .get(getLogin)
+  .post(postLogin);
 
-app.get('/register', getRegister)
-app.post('/register', postRegister)
+app.route('/register')
+  .get(getRegister)
+  .post(postRegister);
 
 app.get('/ultimas', getLastTransactions);
 app.get('/finanzas', getFinanzas);
 
-app.get('/finanza', getFinanza);
-app.post('/finanza', postFinanza);
-app.put('/finanza', putFinanza);
-app.delete('/finanza', deleteFinanza);
+app.route('/finanza')
+  .get(getFinanza)
+  .post(postFinanza)
+  .put(putFinanza)
+  .delete(deleteFinanza);
 
 module.exports = app;

@@ -1,4 +1,4 @@
-//Utilidades
+//Dependencias
 const axios = require('axios').default;
 const moment = require('moment');
 const { v4 } = require('uuid');
@@ -8,11 +8,19 @@ const jwt = require('jsonwebtoken');
 //Modelo de base de datos
 const DB = require("../model/model.js");
 
+//Variables de entorno
 const privateKey = process.env.privateKey;
+const devUser = process.env.devUser;
+const devPass = process.env.devPass;
 const port = process.env.PORT || 3000;
 const url = process.env.BASE_URL || `http://localhost:${port}`;
 
-const getIndex = async (req, res) => {
+const getIndex = (req, res) => {
+  if (!req.cookies.Authorization) {
+    res.cookie("banner_color", "warning", { maxAge: 2000 });
+    res.cookie("notification", "Su sesión no ha sido iniciada o ha expirado", { maxAge: 2000 });
+    return res.redirect("/login");
+  }
   axios.get(`${url}/ultimas`)
     .then((data) => {
       res.render("index", {
@@ -107,7 +115,20 @@ const getLogin = (req, res) => {
 }
 
 const postLogin = (req, res) => {
+  const {user, password} = req.body;
+  
+  if(user == devUser && password == devPass){
+    /* const admin = {
+      user: "admin"
+    };
+    jwt.sign({admin}, privateKey)
+    return res.status(300).json */
+  }
   //TODO: Hacer validaciones y chequear BD para crear un JWT
+  res.status(500).json({
+    msg: "No habilitado aún",
+    code: 500
+  })
 }
 
 const getRegister = (req, res) => {

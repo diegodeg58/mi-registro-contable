@@ -17,7 +17,8 @@ const __node_modules = `${__dirname}/node_modules`;
 app.use("/assets/js",
   express.static(`${__node_modules}/store/dist`),
   express.static(`${__node_modules}/bootstrap/dist/js`),
-  express.static(`${__node_modules}/jquery/dist`)
+  express.static(`${__node_modules}/jquery/dist`),
+  express.static(`${__node_modules}/js-cookie/dist`)
   )
 app.use("/assets/css",
   express.static(`${__dirname}/assets/css`),

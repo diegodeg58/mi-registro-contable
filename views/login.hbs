@@ -64,8 +64,9 @@
       url: '/login',
       contentType: 'application/json',
       data: JSON.stringify(data)
-    }).then(() => {
-      window.location.reload();
+    }).then((data) => {
+      Cookies.set('token', data.token)
+      window.location = "/";
     }).fail((error) => {
       console.error(error);
     });

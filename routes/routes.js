@@ -3,6 +3,7 @@ const app = express.Router();
 
 //Controlador
 const {
+  verifyToken,
   getIndex,
   getLastTransactions,
   getFinanzas,
@@ -16,7 +17,7 @@ const {
   deleteFinanza
 } = require('../src/controller/controller.js');
 
-app.get('/', getIndex);
+app.get('/', verifyToken, getIndex);
 
 app.route('/login')
   .get(getLogin)

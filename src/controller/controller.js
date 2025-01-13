@@ -15,12 +15,25 @@ const devPass = process.env.devPass;
 const port = process.env.PORT || 3000;
 const url = process.env.BASE_URL || `http://localhost:${port}`;
 
-const getIndex = (req, res) => {
-  if (!req.cookies.Authorization) {
-    res.cookie("banner_color", "warning", { maxAge: 2000 });
-    res.cookie("notification", "Su sesión no ha sido iniciada o ha expirado", { maxAge: 2000 });
+const verifyToken = (req, res, next) => {
+  const token = req.cookies['token'];
+  if(typeof token !== 'undefined'){
+    req.token = token;
+    next();
+  }else{
+    // res.cookie("banner_color", "warning", { maxAge: 2000 });
+    // res.cookie("notification", "Su sesión no ha sido iniciada o ha expirado", { maxAge: 2000 });
     return res.redirect("/login");
   }
+}
+
+const getIndex = (req, res) => {
+  const authData = jwt.verify(req.token, privateKey);
+  
+  if(authData.user == 'diegodeg58' && authData.role == 'admin'){
+    return res.render('admin');
+  }
+  
   axios.get(`${url}/ultimas`)
     .then((data) => {
       res.render("index", {
@@ -118,11 +131,19 @@ const postLogin = (req, res) => {
   const {user, password} = req.body;
   
   if(user == devUser && password == devPass){
-    /* const admin = {
-      user: "admin"
+    const admin = {
+      user: "diegodeg58",
+      role: "admin"
     };
-    jwt.sign({admin}, privateKey)
-    return res.status(300).json */
+    const token = jwt.sign(admin, privateKey, {
+      expiresIn: "1d"
+    });
+    const code = 201;
+    return res.status(code).json({
+      status: "ok",
+      code,
+      token
+    })
   }
   //TODO: Hacer validaciones y chequear BD para crear un JWT
   res.status(500).json({
@@ -179,4 +200,4 @@ const deleteFinanza = async (req, res) => {
 
 }
 
-module.exports = { getIndex, getLastTransactions, getFinanzas, getLogin, postLogin, getRegister, postRegister, getFinanza, postFinanza, putFinanza, deleteFinanza }
+module.exports = { verifyToken, getIndex, getLastTransactions, getFinanzas, getLogin, postLogin, getRegister, postRegister, getFinanza, postFinanza, putFinanza, deleteFinanza }

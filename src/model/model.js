@@ -1,13 +1,23 @@
 const pg = require("pg");
 const { Pool } = pg;
+const production = process.env.NODE_ENV === "production";
 
-const pool = new Pool({
-  host: "localhost",
-  user: "postgres",
-  password: "postgres",
-  database: "registro-contable",
-  port: 5432,
-});
+devDBConfig = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+};
+
+prodDBConfig = {
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+};
+
+const pool = new Pool(production ? prodDBConfig : devDBConfig);
 
 const getLastTransactions = async (qty) => {
 }

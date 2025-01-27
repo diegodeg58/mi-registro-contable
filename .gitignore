@@ -105,5 +105,3 @@ dist
 
 # VSCode
 .vscode
-
-package-lock.json

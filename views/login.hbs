@@ -2,7 +2,13 @@
   <title>Inicia sesión en MPRC</title>
 </head>
 
-<div id="liveAlertPlaceholder" class="position-absolute w-100"></div>
+<div id="liveAlertPlaceholder" class="position-absolute w-100 d-none">
+  <div class="alert alert-dismissible fade show">
+    <div>Este es un mensaje de prueba</div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+</div>
+
 <div class="d-flex flex-column justify-content-center" style="height: 100vh;">
   <div>
     <header>
@@ -34,25 +40,12 @@
 </div>
 
 <script>
-  $(document).ready(() => {
-    const appendAlert = (message, type) => {
-      const wrapper = document.createElement('div')
-      wrapper.innerHTML = [
-        `<div class="alert alert-${type} alert-dismissible fade show" role="alert">`,
-        `   <div>${message}</div>`,
-        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        '</div>'
-      ].join('')
-
-      $('#liveAlertPlaceholder').append(wrapper);
-    }
-
-    const notificationCookie = Cookies.get('notification');
-    const bannerColorCookie = Cookies.get('banner_color');
-    if (notificationCookie) {
-      appendAlert(notificationCookie, bannerColorCookie);
-    }
-  })
+  const appendAlert = (message, type) => {
+    $('#liveAlertPlaceholder').removeClass('d-none');
+    $('#liveAlertPlaceholder .alert').addClass('alert-' + type);
+    $('#liveAlertPlaceholder .alert div:first-child').text(message);
+  }
+  
   $('#login').on('submit', (event) => {
     event.preventDefault();
     const data = $('#login').serializeArray().reduce((json, { name, value }) => {
@@ -70,5 +63,13 @@
     }).fail((error) => {
       console.error(error);
     });
+  })
+
+  $(document).ready(() => {
+    const notificationCookie = Cookies.get('notification');
+    const bannerColorCookie = Cookies.get('banner_color');
+    if (notificationCookie) {
+      appendAlert(notificationCookie, bannerColorCookie);
+    }
   })
 </script>

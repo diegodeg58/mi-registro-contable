@@ -1,3 +1,5 @@
+console.log("Test");
+
 //Dependencias de express
 const express = require('express');
 const hbs = require('express-handlebars');

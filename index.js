@@ -29,7 +29,6 @@ const port = process.env.PORT || 3000;
 const url = process.env.BASE_URL || `http://localhost:${port}`;
 app.listen(port, console.log(`Servidor activo en: ${url}`));
 
-app.set("views", path.join(__dirname, "/var/task/views"));
 app.set("view engine", "hbs");
 app.engine(
   "hbs",

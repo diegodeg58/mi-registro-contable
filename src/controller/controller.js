@@ -136,6 +136,7 @@ const getFinanzas = async (req, res) => {
 };
 
 const getLogin = (req, res) => {
+  return res.send("Test");
   res.render("login");
 };
 

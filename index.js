@@ -42,3 +42,5 @@ app.engine(
 );
 
 app.use(routes)
+
+console.log(process.env.NODE_ENV);

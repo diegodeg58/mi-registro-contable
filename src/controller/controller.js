@@ -200,9 +200,11 @@ const postRegister = (req, res) => {
       });
     })
     .catch((error) => {
+      console.error(error.message);
       res.status(500).json({
         status: "error",
         msg: DB.getErrorMessage(error.code),
+        code: error.code
       });
     });
 };

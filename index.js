@@ -1,9 +1,8 @@
-console.log("Test");
-
 //Dependencias de express
 const express = require('express');
 const hbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 
 //Variables de entorno
 require('dotenv').config()
@@ -34,10 +33,10 @@ app.set("view engine", "hbs");
 app.engine(
   "hbs",
   hbs.engine({
-    layoutsDir: `${__dirname}/views/layouts`,
-    partialsDir: `${__dirname}/views/partials`,
-    extname: 'hbs',
-    defaultLayout: 'main'
+    layoutsDir: path.join(__dirname, "/views/layouts"),
+    partialsDir: path.join(__dirname, "/views/partials"),
+    extname: "hbs",
+    defaultLayout: "main",
   })
 );
 

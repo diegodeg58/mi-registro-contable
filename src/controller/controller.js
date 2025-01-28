@@ -42,6 +42,7 @@ const getIndex = (req, res) => {
     return res.render("admin");
   }
 
+  return res.render("index");
   axios
     .get(`${url}/ultimas`)
     .then((data) => {

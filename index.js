@@ -29,12 +29,13 @@ const port = process.env.PORT || 3000;
 const url = process.env.BASE_URL || `http://localhost:${port}`;
 app.listen(port, console.log(`Servidor activo en: ${url}`));
 
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
 app.engine(
   "hbs",
   hbs.engine({
-    layoutsDir: path.join(__dirname, "/views/layouts"),
-    partialsDir: path.join(__dirname, "/views/partials"),
+    layoutsDir: path.join(__dirname, "views", "layouts"),
+    partialsDir: path.join(__dirname, "views", "partials"),
     extname: "hbs",
     defaultLayout: "main",
   })

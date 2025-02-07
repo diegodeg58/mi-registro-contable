@@ -15,17 +15,17 @@ const devUser = process.env.devUser;
 const devPass = process.env.devPass;
 const devRole = process.env.devRole;
 const port = process.env.PORT || 3000;
-const url = process.env.BASE_URL || `http://localhost:${port}`;
+const url = process.env.VERCEL_URL || `http://localhost:${port}`;
 
 const verifyToken = (req, res, next) => {
   const token = req.cookies["token"];
   try {
-    if (typeof token == "undefined") throw new Error("Token no definido");
+    if (typeof token == "undefined") throw new Error("");
     req.authData = jwt.verify(token, privateKey);
     req.token = token;
     next();
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
     res.cookie("banner_color", "warning", { maxAge: 2000 });
     res.cookie("notification", error.message, {
       maxAge: 2000,
@@ -156,9 +156,8 @@ const postLogin = (req, res) => {
       token,
     });
   }
-  //TODO: Hacer validaciones y chequear BD para crear un JWT
-  const BDUser = DB.getUser(user);
-  BDUser.then((data) => {
+  const bdUserPromise = DB.getUser(user);
+  bdUserPromise.then((data) => {
     if (data) {
       const valid = bcrypt.compareSync(password, data.password);
       if (valid) {
@@ -176,7 +175,7 @@ const postLogin = (req, res) => {
     }
     res.status(401).json({
       status: "error",
-      msg: "Usuario o contraseña incorrectos",
+      message: "Usuario o contraseña incorrectos",
     });
   });
 };

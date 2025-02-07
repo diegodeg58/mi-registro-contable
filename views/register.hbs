@@ -43,15 +43,16 @@
 <script>
   $('#register').on('submit', (event) => {
     event.preventDefault();
-    const data = $('#register').serializeArray().reduce((json, { name, value }) => {
-      json[name] = value;
-      return json;
-    }, {});
+    const data = toJsonForm($('#register'));
 
-    $.post({
+    processRequestButton($('#register button'), $.post({
       url: '/register',
       contentType: 'application/json',
       data: JSON.stringify(data)
-    });
+    }), (data) => {
+      
+    }, (error) => {
+      console.error(error);
+    })
   })
 </script>

@@ -19,7 +19,8 @@ app.use("/assets/js",
   express.static(`${__node_modules}/store/dist`),
   express.static(`${__node_modules}/bootstrap/dist/js`),
   express.static(`${__node_modules}/jquery/dist`),
-  express.static(`${__node_modules}/js-cookie/dist`)
+  express.static(`${__node_modules}/js-cookie/dist`),
+  express.static(`${__dirname}/assets/js`)
   )
 app.use("/assets/css",
   express.static(`${__dirname}/assets/css`),

@@ -2,83 +2,83 @@
   <h1 class="text-center">Mi registro contable</h1>
 </header>
 
-<section id="acciones">
-  <div class="container d-grid gap-2 mb-3">
-    <button class="btn btn-outline-success" type="button" data-bs-toggle="modal" data-bs-target="#nuevaModal">Nueva
-      finanza</button>
-  </div>
+<div class="container d-grid gap-2 mb-3">
+  <button id="logout" class="btn btn-secondary" type="button">Cerrar sesión</button>
+</div>
 
-  <div class="modal fade" id="nuevaModal" tabindex="-1" aria-labelledby="nuevaModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form>
-          <div class="modal-header">
-            <h5 class="modal-title" id="nuevaModalLabel">Nueva finanza</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="mb-3 col-6">
-                <label for="id-fecha" class="form-label">Fecha</label>
-                <input type="date" name="fecha" id="id-fecha" class="form-control" required>
+
+{{!-- <section id="acciones">
+    <div class="modal fade" id="nuevaModal" tabindex="-1" aria-labelledby="nuevaModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form>
+            <div class="modal-header">
+              <h5 class="modal-title" id="nuevaModalLabel">Nueva finanza</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="mb-3 col-6">
+                  <label for="id-fecha" class="form-label">Fecha</label>
+                  <input type="date" name="fecha" id="id-fecha" class="form-control" required>
+                </div>
+                <div class="mb-3 col-6">
+                  <label for="id-tipo" class="form-label">Tipo de finanza</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="tipo" id="id-gasto" value="egreso" checked>
+                    <label class="form-check-label" for="id-gasto">
+                      Gasto
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="tipo" id="id-ingreso" value="ingreso">
+                    <label class="form-check-label" for="id-ingreso">
+                      Ingreso
+                    </label>
+                  </div>
+                </div>
               </div>
-              <div class="mb-3 col-6">
-                <label for="id-tipo" class="form-label">Tipo de finanza</label>
+              <div class="row">
+                <div class="mb-3 col-4">
+                  <label for="id-monto" class="form-label">Monto</label>
+                  <input type="number" name="monto" id="id-monto" class="form-control" required>
+                </div>
+                <div class="mb-3 col-8">
+                  <label for="id-nombre" class="form-label">Usuario/a</label>
+                  <input type="text" name="persona" id="id-nombre" class="form-control" required>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="id-descripcion" class="form-label">Descripción</label>
+                <input type="text" name="descripcion" id="id-descripcion" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="id-tipo" class="form-label">Tipo de ingreso/gasto</label>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="tipo" id="id-gasto" value="egreso" checked>
-                  <label class="form-check-label" for="id-gasto">
-                    Gasto
+                  <input class="form-check-input" type="radio" name="fijo" id="id-nofijo" value="nofijo" checked>
+                  <label class="form-check-label" for="id-nofijo">
+                    No fijo
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="tipo" id="id-ingreso" value="ingreso">
-                  <label class="form-check-label" for="id-ingreso">
-                    Ingreso
+                  <input class="form-check-input" type="radio" name="fijo" id="id-fijo" value="fijo">
+                  <label class="form-check-label" for="id-fijo">
+                    Fijo
                   </label>
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="mb-3 col-4">
-                <label for="id-monto" class="form-label">Monto</label>
-                <input type="number" name="monto" id="id-monto" class="form-control" required>
-              </div>
-              <div class="mb-3 col-8">
-                <label for="id-nombre" class="form-label">Usuario/a</label>
-                <input type="text" name="persona" id="id-nombre" class="form-control" required>
-              </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Agregar</button>
             </div>
-            <div class="mb-3">
-              <label for="id-descripcion" class="form-label">Descripción</label>
-              <input type="text" name="descripcion" id="id-descripcion" class="form-control" required>
-            </div>
-            <div class="mb-3">
-              <label for="id-tipo" class="form-label">Tipo de ingreso/gasto</label>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="fijo" id="id-nofijo" value="nofijo" checked>
-                <label class="form-check-label" for="id-nofijo">
-                  No fijo
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="fijo" id="id-fijo" value="fijo">
-                <label class="form-check-label" for="id-fijo">
-                  Fijo
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Agregar</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+</section> --}}
 
-<section id="ultimas">
+{{!-- <section id="ultimas">
   <div class="container">
     <table class="table table-success table-striped table-hover">
       <thead>
@@ -91,22 +91,22 @@
         </tr>
       </thead>
       <tbody>
-        {{#each lista}}
-        <tr data-id="{{this.id}}">
-          <td>{{this.tipo}}</td>
-          <td>{{this.monto}}</td>
-          <td>{{this.persona}}</td>
-          <td>{{this.descripcion}}</td>
+        {{!#each lista}}
+        <tr data-id="{{!this.id}}">
+          <td>{{!this.tipo}}</td>
+          <td>{{!this.monto}}</td>
+          <td>{{!this.persona}}</td>
+          <td>{{!this.descripcion}}</td>
           <td><button class="btn btn-info btn-detalles" data-bs-toggle="modal"
               data-bs-target="#modal-detalles">Detalles</button></td>
         </tr>
-        {{/each}}
+        {{!/each}}
       </tbody>
     </table>
   </div>
-</section>
+</section> --}}
 
-<section id="detalles">
+{{!-- <section id="detalles">
   <div class="modal fade" id="modal-detalles" tabindex="-1" aria-labelledby="detallesModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -154,11 +154,11 @@
       </div>
     </div>
   </div>
-</section>
+</section> --}}
 
 <script>
   $(() => {
-    $('form').submit(function (event) {
+    /*$('form').submit(function (event) {
       event.preventDefault();
 
       let datos = {};
@@ -179,9 +179,9 @@
           alert("Ha ocurrido un error")
         }
       });
-    });
+    });*/
 
-    $('#ultimas .btn-detalles').click(function () {
+    /*$('#ultimas .btn-detalles').click(function () {
       const id = $($(this).parents('tr')[0]).data('id');
       $('#modal-detalles .modal-body td').text("");
 
@@ -198,6 +198,11 @@
         .fail(function () {
           alert("Ha ocurrido un error");
         });
+    });*/
+
+    $("#logout").click(() => {
+      Cookies.remove('token');
+      window.location = "/login";
     });
   })
 </script>

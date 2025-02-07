@@ -3,10 +3,6 @@
 </head>
 
 <div id="liveAlertPlaceholder" class="position-absolute w-100 d-none">
-  <div class="alert alert-dismissible fade show">
-    <div>Este es un mensaje de prueba</div>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
 </div>
 
 <div class="d-flex flex-column justify-content-center" style="height: 100vh;">
@@ -41,27 +37,28 @@
 
 <script>
   const appendAlert = (message, type) => {
+    const alert = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>`;
+    $('#liveAlertPlaceholder').html(alert);
     $('#liveAlertPlaceholder').removeClass('d-none');
-    $('#liveAlertPlaceholder .alert').addClass('alert-' + type);
-    $('#liveAlertPlaceholder .alert div:first-child').text(message);
   }
-  
+
   $('#login').on('submit', (event) => {
     event.preventDefault();
-    const data = $('#login').serializeArray().reduce((json, { name, value }) => {
-      json[name] = value;
-      return json;
-    }, {});
+    const data = toJsonForm($('#login'));
 
-    $.post({
+    processRequestButton($('#login button'), $.post({
       url: '/login',
       contentType: 'application/json',
       data: JSON.stringify(data)
-    }).then((data) => {
+    }), (data) => {
       Cookies.set('token', data.token)
       window.location = "/";
-    }).fail((error) => {
+    }, (error) => {
       console.error(error);
+      appendAlert(error.responseJSON.message, 'danger');
     });
   })
 

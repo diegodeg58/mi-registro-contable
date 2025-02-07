@@ -2,12 +2,15 @@
   <title>Registro en MPRC</title>
 </head>
 
+<div id="liveAlertPlaceholder" class="position-absolute w-100 d-none">
+</div>
+
 <div class="d-flex flex-column justify-content-center" style="height: 100vh;">
   <div>
     <header>
       <h1 class="text-center">Registra tu cuenta</h1>
     </header>
-    
+
     <div class="col-8 col-md-6 col-xl-4 col-xxl-3 m-auto">
       <form id="register">
         <div class="mb-3">
@@ -50,9 +53,14 @@
       contentType: 'application/json',
       data: JSON.stringify(data)
     }), (data) => {
-      
+      appendAlert(data.message + ": redirigiendo...", 'success');
+      setTimeout(() => {
+        window.location = "/login";
+      }, 2000);
     }, (error) => {
       console.error(error);
+      const response = error.responseJSON;
+      appendAlert(response.message, 'danger');
     })
   })
 </script>

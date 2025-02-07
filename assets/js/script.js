@@ -24,3 +24,12 @@ function toJsonForm(form) {
     return obj;
   }, {});
 }
+
+const appendAlert = (message, type) => {
+  const alert = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>`;
+  $("#liveAlertPlaceholder").html(alert);
+  $("#liveAlertPlaceholder").removeClass("d-none");
+};

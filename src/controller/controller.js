@@ -185,26 +185,30 @@ const getRegister = (req, res) => {
 };
 
 const postRegister = (req, res) => {
+  const user = req.body.user;
+  const email = req.body.email;
+  const password = req.body.password;
+  
   const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(req.body.password, salt);
+  const hashPassword = bcrypt.hashSync(password, salt);
 
   DB.setNewUser({
-    user: req.body.user,
-    email: req.body.email,
-    password: hash,
+    user: user,
+    email: email,
+    password: hashPassword,
   })
     .then(() => {
       res.status(201).json({
         status: "ok",
-        msg: "Usuario creado",
+        message: "Usuario creado",
       });
     })
     .catch((error) => {
       console.error(error.message);
       res.status(500).json({
         status: "error",
-        msg: DB.getErrorMessage(error.code),
-        code: error.code
+        message: DB.getErrorMessage(error.code),
+        code: error.code,
       });
     });
 };

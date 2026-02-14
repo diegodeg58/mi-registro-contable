@@ -105,3 +105,6 @@ dist
 
 # VSCode
 .vscode
+
+# Docker files
+compose.override.yml

@@ -1,0 +1,41 @@
+include:
+  - compose.override.yml
+services:
+  node:
+    image: node:22
+    container_name: mrc-node
+    restart: always
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=development
+      - privateKey=private_key
+      - devUser=dev_user
+      - devPass=dev_pass
+      - devRole=dev_role
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - DB_DATABASE=mydb
+      - DB_PORT=5432
+    volumes:
+      - ./:/home/node/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    command: bash -c "npm run dev"
+  db:
+    image: postgres:15.15
+    container_name: mrc-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:

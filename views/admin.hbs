@@ -2,6 +2,180 @@
   <title>Administración</title>
 </head>
 
-<section>
-  <h1>Título C:</h1>
+<style>
+  input[type="number"] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+  }
+</style>
+
+<section id="acciones">
+  <h1 class="text-center">Cotizaciones</h1>
+  <div class="container d-grid gap-2">
+    {{!-- <a class="btn btn-primary" role="button" href="/crear">Crear</a> --}}
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+      data-bs-target="#modal-form">Crear cotización</button>
+  </div>
 </section>
+
+<section id="formulario">
+  <div class="modal fade" tabindex="-1" id="modal-form">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Crear cotización</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="form-cotizacion">
+            <div class="mb-3">
+              <label for="name" class="form-label">Razón social /
+                Cliente</label>
+              <input type="text" class="form-control" id="name">
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3">
+                  <label for="person" class="form-label">Atención</label>
+                  <input type="text" class="form-control" id="person">
+                </div>
+              </div>
+              <div class="col">
+                <div class="mb-3">
+                  <label for="position" class="form-label">Cargo</label>
+                  <input type="text" class="form-control" id="position">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3">
+                  <label for="address" class="form-label">Dirección</label>
+                  <input type="text" class="form-control" id="address">
+                </div>
+              </div>
+              <div class="col">
+                <div class="mb-3">
+                  <label for="phone" class="form-label">Teléfono</label>
+                  <input type="text" class="form-control" id="phone">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3">
+                  <label for="city" class="form-label">Ciudad</label>
+                  <input type="text" class="form-control" id="city">
+                </div>
+              </div>
+              <div class="col">
+                <div class="mb-3">
+                  <label for="rut" class="form-label">RUT</label>
+                  <input type="text" class="form-control" id="rut">
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email">
+            </div>
+            <h6>Detalles</h6>
+            <div class="mb-3">
+              <table id="table-detalles" class="table">
+                <thead>
+                  <tr>
+                    <th>Detalle</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Total</th>
+                    <th>Borrar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary"
+            data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="d-none">
+  <table>
+    <tbody>
+      <tr id="row-details">
+        <td style="width: auto;"><input type="text" class="form-control"></td>
+        <td style="width: 10%;"><input type="number" class="form-control"></td>
+        <td style="width: 15%;"><input type="number" class="form-control"></td>
+        <td style="width: 15%;"><input type="text" class="form-control"
+            disabled>
+        </td>
+        <td style="width: 15%;"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script type="module">
+  const addRow = () => {
+    $('#row-details').clone().removeAttr('id').appendTo('#table-detalles tbody');
+  }
+  const resetClient = () => {
+    $('#form-cotizacion input').val('');
+  }
+  const resetDetails = () => {
+    $('#table-detalles tbody').empty();
+    addRow();
+  }
+
+  const hasDataInRow = row => {
+    let bool = false;
+    const childrenInput = row.find('input:not([disabled])');
+    childrenInput.each((index, input) => {
+      if($(input).val() != '') bool = true;
+    })
+    return bool;
+  }
+
+  const hasAllFieldsWithData = row => {
+    let bool = true;
+    const childrenInput = row.find('input:not([disabled])');
+    childrenInput.each((index, input) => {
+      if ($(input).val() == '') bool = false;
+    })
+    return bool;
+  }
+
+  const hasRowSiblings = row => {
+    return row.siblings().length > 0;
+  }
+
+  $('#modal-form').on('show.bs.modal', () => {
+    resetClient();
+    resetDetails();
+  });
+
+  $('#table-detalles').on('blur', 'input', (event) => {
+    const target = $(event.currentTarget);
+    const row = target.parents('tr');
+    const hasSomeInput = hasDataInRow(row);
+    const hasAllInput = hasAllFieldsWithData(row);
+    const hasSiblings = hasRowSiblings(row);
+    if (hasAllInput) addRow();
+    if (!hasSomeInput && hasSiblings) row.remove();
+  })
+</script>

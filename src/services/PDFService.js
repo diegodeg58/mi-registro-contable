@@ -87,7 +87,8 @@ const crearPDFCotizacion = async (data, res) => {
     };
 
     // Generate PDF buffer
-    const result = await generatePDF(document);
+    const pdfNode = await import('pdf-node');
+    const result = await pdfNode.generatePDF(document);
 
     // Set appropriate headers and send buffer
     res.setHeader("Content-Type", "application/pdf");

@@ -1,0 +1,199 @@
+<head>
+  <style>
+    * {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 7pt;
+      line-height: 9pt;
+    }
+
+    div#cotizacion {
+      font-weight: bold;
+    }
+
+    hr {
+      height: 0.1pt;
+      background: #000000;
+      border: 0 solid black;
+    }
+
+    table {
+      border-collapse: collapse;
+    }
+
+    table#cliente,
+    table#consideraciones,
+    table#totales {
+      width: 100%;
+      text-align: left;
+    }
+
+    table#cliente tr th:nth-child(3) {
+      border-left: 1pt solid black;
+      padding-left: 5pt;
+    }
+
+    table#cliente tr td:nth-child(even) {
+      text-transform: uppercase;
+    }
+
+    h2 {
+      text-transform: uppercase;
+      font-size: 7pt;
+      font-weight: 600;
+    }
+
+    table#detalles {
+      width: 100%;
+      margin-bottom: 10pt;
+    }
+
+    table#detalles th,
+    table#detalles td,
+    table#totales th,
+    table#totales td {
+      border: 1pt solid black;
+      padding: 3pt;
+    }
+
+    table#detalles tbody td:nth-child(2),
+    table#detalles tbody td:nth-child(4),
+    table#detalles tbody td:nth-child(5),
+    table#totales td:nth-child(2)
+     {
+      text-align: end;
+    }
+
+    table#consideraciones thead th {
+      font-size: small;
+      padding-bottom: 5pt;
+    }
+
+    table#consideraciones th,
+    table#consideraciones td {
+      padding: 2pt;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="cotizacion">
+    Cotización Nº {{nro_cot}}
+  </div>
+  <hr>
+  <table id="cliente">
+    {{#with client}}
+    <tbody>
+      <tr>
+        <th>Fecha</td>
+        <td>{{date}}</td>
+        <th>Atención</td>
+        <td>{{person}}</td>
+      </tr>
+      <tr>
+        <th>Señores</td>
+        <td>{{name}}</td>
+        <th>Cargo</td>
+        <td>{{position}}</td>
+      </tr>
+      <tr>
+        <th>Dirección</td>
+        <td>{{address}}</td>
+        <th>Fono</td>
+        <td>{{phone}}</td>
+      </tr>
+      <tr>
+        <th>Ciudad</td>
+        <td>{{city}}</td>
+        <th>Email</td>
+        <td>{{email}}</td>
+      </tr>
+      <tr>
+        <th>RUT</td>
+        <td>{{rut}}</td>
+      </tr>
+    </tbody>
+    {{/with}}
+  </table>
+  <hr style="margin-bottom: 10mm;">
+
+  <h2>Tengo el agrado de presentarle el siguiente presupuesto</h2>
+  <table id="detalles">
+    <thead>
+      <tr>
+        <th>Nº</th>
+        <th>Cantidad</th>
+        <th>Artículo/Descripción</th>
+        <th>Precio unitario</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each detalles}}
+      <tr>
+        <td>{{line}}</td>
+        <td>{{qty}}</td>
+        <td>{{description}}</td>
+        <td>{{price}}</td>
+        <td>{{total}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <table style="width: 100%;">
+    <td style="width: 50%">
+      {{#with consideraciones}}
+      <table id="consideraciones">
+        <thead>
+          <tr>
+            <th colspan="2">Consideraciones generales</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Formas de pago</th>
+            <td>{{tipo_pago}}</td>
+          </tr>
+          <tr>
+            <th>Plazo de entrega</th>
+            <td>{{plazo_entrega}}</td>
+          </tr>
+          <tr>
+            <th>Moneda</th>
+            <td>{{tipo_moneda}}</td>
+          </tr>
+          <tr>
+            <th>Válida hasta</th>
+            <td>{{fecha_valida}}</td>
+          </tr>
+          <tr>
+            <th>Comentarios</th>
+            <td>{{comentarios}}</td>
+          </tr>
+        </tbody>
+      </table>
+      {{/with}}
+    </td>
+    <td style="width: 50%">
+      {{#with totales}}
+      <table id="totales">
+        <tr>
+          <th>Total Neto</th>
+          <td>{{total_neto}}</td>
+        </tr>
+        <tr>
+          <th>Impuesto (15.25%)</th>
+          <td>{{impuesto}}</td>
+        </tr>
+        <tr>
+          <th>Total</th>
+          <td>{{total}}</td>
+        </tr>
+      </table>
+      {{/with}}
+    </td>
+  </table>
+  <p><b>Datos bancarios:</b><br>
+    Cuenta Vista - Banco del Estado Nº 17958240<br>
+    Diego Rojas - RUT: 17.958.240-6</p>
+</body>

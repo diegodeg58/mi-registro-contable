@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const { generatePDF } = require("pdf-node");
 
 const formatToCLP = (number) => {
   return new Intl.NumberFormat("es-CL", {

@@ -5,16 +5,17 @@ const app = express.Router();
 const {
   verifyToken,
   getIndex,
-  getLastTransactions,
-  getFinanzas,
+/*   getLastTransactions,
+  getFinanzas, */
   getLogin,
   postLogin,
   getRegister,
   postRegister,
-  getFinanza,
+/*   getFinanza,
   postFinanza,
   putFinanza,
-  deleteFinanza
+  deleteFinanza */
+  getCrear
 } = require('../src/controller/controller.js');
 
 app.get('/', verifyToken, getIndex);
@@ -27,13 +28,16 @@ app.route('/register')
   .get(getRegister)
   .post(postRegister);
 
-app.get('/ultimas', getLastTransactions);
+app.route('/crear')
+  .get(getCrear);
+
+/* app.get('/ultimas', getLastTransactions);
 app.get('/finanzas', getFinanzas);
 
 app.route('/finanza')
   .get(getFinanza)
   .post(postFinanza)
   .put(putFinanza)
-  .delete(deleteFinanza);
+  .delete(deleteFinanza); */
 
 module.exports = app;

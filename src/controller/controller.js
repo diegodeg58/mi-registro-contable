@@ -9,6 +9,9 @@ const bcrypt = require("bcryptjs");
 //Modelo de base de datos
 const DB = require("../model/model.js");
 
+//Servicios
+const PDF = require("../services/PDFService.js")
+
 //Variables de entorno
 const privateKey = process.env.privateKey;
 const devUser = process.env.devUser;
@@ -39,7 +42,9 @@ const getIndex = (req, res) => {
   const authData = req.authData;
 
   if (authData.user == devUser && authData.role == devRole) {
-    return res.render("admin");
+    return res.render("admin", {
+      cotizaciones: []
+    });
   }
 
   return res.render("index");
@@ -249,6 +254,10 @@ const putFinanza = async (req, res) => {};
 
 const deleteFinanza = async (req, res) => {};
 
+const getCrear = async (req, res) => {
+  PDF.crearPDFCotizacion(req, res);
+}
+
 module.exports = {
   verifyToken,
   getIndex,
@@ -262,4 +271,5 @@ module.exports = {
   postFinanza,
   putFinanza,
   deleteFinanza,
+  getCrear
 };

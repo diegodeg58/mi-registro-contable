@@ -1,4 +1,5 @@
 //Dependencias
+const fs = require("fs");
 const axios = require("axios").default;
 const moment = require("moment");
 const { v4 } = require("uuid");
@@ -10,7 +11,7 @@ const bcrypt = require("bcryptjs");
 const DB = require("../model/model.js");
 
 //Servicios
-const PDF = require("../services/PDFService.js")
+const PDF = require("../services/PDFService.js");
 
 //Variables de entorno
 const privateKey = process.env.privateKey;
@@ -43,7 +44,7 @@ const getIndex = (req, res) => {
 
   if (authData.user == devUser && authData.role == devRole) {
     return res.render("admin", {
-      cotizaciones: []
+      cotizaciones: [],
     });
   }
 
@@ -107,7 +108,7 @@ const getFinanzas = async (req, res) => {
           "sk": "finanzas#c84e410f",
           "pk": "finanzas#c84e410f",
           "keys_gsi_sk": "2022-07-05T02:47:41.383Z"
-      } */
+      } */,
     );
     const next = lista.next;
     lista = lista.results.map(async (finanza, index) => {
@@ -193,7 +194,7 @@ const postRegister = (req, res) => {
   const user = req.body.user;
   const email = req.body.email;
   const password = req.body.password;
-  
+
   const salt = bcrypt.genSaltSync(10);
   const hashPassword = bcrypt.hashSync(password, salt);
 
@@ -255,8 +256,27 @@ const putFinanza = async (req, res) => {};
 const deleteFinanza = async (req, res) => {};
 
 const getCrear = async (req, res) => {
-  PDF.crearPDFCotizacion(req, res);
-}
+  try {
+    return await PDF.crearPDFCotizacion(req, res);
+    await fs.promises.access(
+      "/var/task/node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs",
+    );
+    console.log("File exists");
+    // Proceed with operations on the file
+    return res.send("Ok");
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      console.error("File does not exist:", error.path);
+      // Handle the missing file gracefully
+    } else {
+      console.error("An unexpected error occurred:", error.message);
+      // Handle other types of errors
+    }
+    return res.status(500).json({
+      error,
+    });
+  }
+};
 
 module.exports = {
   verifyToken,
@@ -271,5 +291,5 @@ module.exports = {
   postFinanza,
   putFinanza,
   deleteFinanza,
-  getCrear
+  getCrear,
 };

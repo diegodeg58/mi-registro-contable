@@ -38,6 +38,7 @@ const crearPDFCotizacion = async (data, res) => {
         default: footer,
       },
     },
+    directory: "/tmp"
   };
 
   try {
@@ -93,9 +94,9 @@ const crearPDFCotizacion = async (data, res) => {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", 'inline; filename="MyFile.pdf"');
     res.setHeader("Content-Length", result.size);
-    res.send(result.buffer);
+    return res.send(result.buffer);
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       error: "Failed to generate PDF",
     });
   }

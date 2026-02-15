@@ -6,7 +6,7 @@ const formatToCLP = (number) => {
     style: "currency",
     currency: "CLP",
   }).format(number);
-}
+};
 
 const crearPDFCotizacion = async (data, res) => {
   // Read HTML template
@@ -38,7 +38,7 @@ const crearPDFCotizacion = async (data, res) => {
         default: footer,
       },
     },
-    directory: "/tmp"
+    phantomPath: "./node_modules/phantomjs-prebuilt/bin/phantomjs",
   };
 
   try {
@@ -46,7 +46,7 @@ const crearPDFCotizacion = async (data, res) => {
     const document = {
       html: html,
       data: {
-        nro_cot: Intl.NumberFormat().format(1).padStart(3, '0'),
+        nro_cot: Intl.NumberFormat().format(1).padStart(3, "0"),
         client: {
           date: new Date().toLocaleDateString("es-CL"),
           person: "Jonathan León",
@@ -87,7 +87,7 @@ const crearPDFCotizacion = async (data, res) => {
     };
 
     // Generate PDF buffer
-    const pdfNode = await import('pdf-node');
+    const pdfNode = await import("pdf-node");
     const result = await pdfNode.generatePDF(document);
 
     // Set appropriate headers and send buffer

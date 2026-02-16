@@ -38,7 +38,10 @@ const crearPDFCotizacion = async (data, res) => {
         default: footer,
       },
     },
-    phantomPath: "./node_modules/phantomjs-prebuilt/bin/phantomjs",
+    phantomPath: path.resolve(
+      process.cwd(),
+      "node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs",
+    ),
   };
 
   try {

@@ -1,19 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 
-// Set library paths at module load time, not just in the function
-if (process.env.NODE_ENV === "production") {
-  process.env.FONTCONFIG_PATH = path.join(process.cwd(), "fonts");
-  process.env.LD_LIBRARY_PATH = path.join(process.cwd(), "fonts");
-}
-
-const formatToCLP = (number) => {
-  return new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-  }).format(number);
-};
-
 const crearPDFCotizacion = async (data, res) => {
   // Read HTML template
   const html = await fs.promises.readFile(
@@ -29,7 +16,7 @@ const crearPDFCotizacion = async (data, res) => {
     "utf8",
   );
 
-  // PDF options with TypeScript type
+  // PDF options with fontconfig path
   const options = {
     format: "letter",
     orientation: "portrait",
@@ -50,13 +37,15 @@ const crearPDFCotizacion = async (data, res) => {
     ),
     childProcessOptions: {
       env: {
+        ...process.env,
         OPENSSL_CONF: "/dev/null",
+        LD_LIBRARY_PATH: path.join(process.cwd(), "fonts"),
+        FONTCONFIG_PATH: path.join(process.cwd(), "fonts"),
       },
     },
   };
 
   try {
-    // Document configuration for buffer output
     const document = {
       html: html,
       data: {
@@ -96,24 +85,31 @@ const crearPDFCotizacion = async (data, res) => {
         },
       },
       type: "pdf",
-      buffer: true, // Enable buffer output
+      buffer: true,
       pdfOptions: options,
     };
 
-    // Generate PDF buffer
     const pdfNode = await import("pdf-node");
     const result = await pdfNode.generatePDF(document);
 
-    // Set appropriate headers and send buffer
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", 'inline; filename="MyFile.pdf"');
     res.setHeader("Content-Length", result.size);
     return res.send(result.buffer);
   } catch (error) {
+    console.error("PDF Generation Error:", error);
     return res.status(500).json({
       error: "Failed to generate PDF",
+      details: error.message,
     });
   }
+};
+
+const formatToCLP = (number) => {
+  return new Intl.NumberFormat("es-CL", {
+    style: "currency",
+    currency: "CLP",
+  }).format(number);
 };
 
 module.exports = {

@@ -4,5 +4,13 @@
       "source": "/(.*)",
       "destination": "index.js"
     }
-  ]
+  ],
+  "env": {
+    "LD_LIBRARY_PATH": "./fonts"
+  },
+  "functions": {
+    "index.js": {
+      "includeFiles": "fonts/**"
+    }
+  }
 }

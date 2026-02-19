@@ -259,7 +259,7 @@ const getCrear = async (req, res) => {
   try {
     // return await PDF.crearPDFCotizacion(req, res);
     await fs.promises.access(
-      "/var/task/fonts/fonts.conf",
+      "/fonts/fonts.conf",
     );
     console.log("File exists");
     // Proceed with operations on the file

@@ -38,7 +38,7 @@ const crearPDFCotizacion = async (data, res) => {
   };
 
   if (process.env.NODE_ENV === "production") {
-    options[childProcessOptions] = {
+    options['childProcessOptions'] = {
       env: {
         ...process.env,
         OPENSSL_CONF: "/dev/null",

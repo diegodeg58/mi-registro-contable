@@ -266,7 +266,6 @@ const getCrear = async (req, res) => {
     );
     
     // return await PDF.crearPDFCotizacion(req, res);
-    await fs.promises.access(path.join(process.cwd(), "fonts"));
     await fs.promises.access("/var/task/fonts");
     // Proceed with operations on the file
     return res.send("Ok");

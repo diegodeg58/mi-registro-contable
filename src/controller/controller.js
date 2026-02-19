@@ -258,12 +258,13 @@ const deleteFinanza = async (req, res) => {};
 const getCrear = async (req, res) => {
   try {
     const path = require("path");
-    return await fs.promises.access(
+    await fs.promises.access(
       path.join(
         process.cwd(),
         "node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs",
       ),
     );
+    return res.send("Ok");
     return await PDF.crearPDFCotizacion(req, res);
   } catch (error) {
     if (error.code === "ENOENT") {

@@ -42,6 +42,7 @@ const crearPDFCotizacion = async (data, res) => {
       process.cwd(),
       "node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs",
     ),
+    phantomArgs: ["-ignore-ssl-errors=yes"],
   };
 
   try {

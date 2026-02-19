@@ -1,6 +1,12 @@
 const fs = require("fs");
 const path = require("path");
 
+// Set library paths at module load time, not just in the function
+if (process.env.NODE_ENV === "production") {
+  process.env.FONTCONFIG_PATH = path.join(process.cwd(), "fonts");
+  process.env.LD_LIBRARY_PATH = path.join(process.cwd(), "fonts");
+}
+
 const formatToCLP = (number) => {
   return new Intl.NumberFormat("es-CL", {
     style: "currency",
@@ -50,10 +56,6 @@ const crearPDFCotizacion = async (data, res) => {
   };
 
   try {
-    if (process.env.NODE_ENV === "production") {
-      process.env.FONTCONFIG_PATH = path.join(process.cwd(), "fonts");
-      process.env.LD_LIBRARY_PATH = path.join(process.cwd(), "fonts");
-    }
     // Document configuration for buffer output
     const document = {
       html: html,

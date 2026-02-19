@@ -45,8 +45,10 @@ const crearPDFCotizacion = async (data, res) => {
   };
 
   try {
-    process.env.FONTCONFIG_PATH = path.join(process.cwd(), "fonts");
-    process.env.LD_LIBRARY_PATH = path.join(process.cwd(), "fonts");
+    if (process.env.NODE_ENV === "production") {
+      process.env.FONTCONFIG_PATH = path.join(process.cwd(), "fonts");
+      process.env.LD_LIBRARY_PATH = path.join(process.cwd(), "fonts");
+    }
     // Document configuration for buffer output
     const document = {
       html: html,

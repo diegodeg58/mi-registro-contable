@@ -6,6 +6,7 @@ const { v4 } = require("uuid");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const path = require("path");
 
 //Modelo de base de datos
 const DB = require("../model/model.js");

@@ -258,9 +258,7 @@ const deleteFinanza = async (req, res) => {};
 const getCrear = async (req, res) => {
   try {
     // return await PDF.crearPDFCotizacion(req, res);
-    await fs.promises.access(
-      "/fonts/fonts.conf",
-    );
+    await fs.promises.access(path.join(process.cwd(), "fonts"));
     console.log("File exists");
     // Proceed with operations on the file
     return res.send("Ok");

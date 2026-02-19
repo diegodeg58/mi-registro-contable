@@ -257,6 +257,7 @@ const deleteFinanza = async (req, res) => {};
 
 const getCrear = async (req, res) => {
   try {
+    const path = require("path");
     return await fs.promises.access(
       path.join(
         process.cwd(),

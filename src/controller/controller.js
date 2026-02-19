@@ -257,9 +257,9 @@ const deleteFinanza = async (req, res) => {};
 
 const getCrear = async (req, res) => {
   try {
-    return await PDF.crearPDFCotizacion(req, res);
+    // return await PDF.crearPDFCotizacion(req, res);
     await fs.promises.access(
-      "/var/task/node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs",
+      "/var/task/fonts/fonts.conf",
     );
     console.log("File exists");
     // Proceed with operations on the file

@@ -6,7 +6,6 @@ const { v4 } = require("uuid");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const path = require("path");
 
 //Modelo de base de datos
 const DB = require("../model/model.js");
@@ -259,8 +258,10 @@ const deleteFinanza = async (req, res) => {};
 const getCrear = async (req, res) => {
   try {
     // return await PDF.crearPDFCotizacion(req, res);
-    await fs.promises.access(path.join(process.cwd(), "fonts"));
-    console.log(path.join(process.cwd(), "fonts"));
+    await fs.promises.access(
+      "/var/task/fonts",
+    );
+    console.log("File exists");
     // Proceed with operations on the file
     return res.send("Ok");
   } catch (error) {

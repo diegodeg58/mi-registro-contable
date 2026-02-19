@@ -37,7 +37,7 @@ const crearPDFCotizacion = async (data, res) => {
     ),
   };
 
-  if (process.env.NODE_ENV === "production")
+  if (process.env.NODE_ENV === "production") {
     options[childProcessOptions] = {
       env: {
         ...process.env,
@@ -46,6 +46,7 @@ const crearPDFCotizacion = async (data, res) => {
         FONTCONFIG_PATH: path.join(process.cwd(), "fonts"),
       },
     };
+  }
 
   try {
     const document = {

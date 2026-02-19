@@ -258,14 +258,16 @@ const deleteFinanza = async (req, res) => {};
 const getCrear = async (req, res) => {
   try {
     const path = require("path");
-    // return await PDF.crearPDFCotizacion(req, res);
-    // await fs.promises.access(path.join(process.cwd(), "fonts"));
     console.log("Hardcoded: /var/task/fonts");
     console.log("cwd(): " + path.join(process.cwd(), "fonts"));
     console.log(
       "Is equal: ",
       "/var/task/fonts" === path.join(process.cwd(), "fonts"),
     );
+    
+    // return await PDF.crearPDFCotizacion(req, res);
+    await fs.promises.access(path.join(process.cwd(), "fonts"));
+    await fs.promises.access("/var/task/fonts");
     // Proceed with operations on the file
     return res.send("Ok");
   } catch (error) {

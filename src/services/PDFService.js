@@ -35,15 +35,17 @@ const crearPDFCotizacion = async (data, res) => {
       process.cwd(),
       "node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs",
     ),
-    childProcessOptions: {
+  };
+
+  if (process.env.NODE_ENV === "production")
+    options[childProcessOptions] = {
       env: {
         ...process.env,
         OPENSSL_CONF: "/dev/null",
         LD_LIBRARY_PATH: path.join(process.cwd(), "fonts"),
         FONTCONFIG_PATH: path.join(process.cwd(), "fonts"),
       },
-    },
-  };
+    };
 
   try {
     const document = {

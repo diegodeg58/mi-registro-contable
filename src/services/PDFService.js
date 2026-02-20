@@ -77,9 +77,6 @@ const crearPDFCotizacion = async (data, res) => {
           comentarios: "Algunos comentarios",
         },
       },
-      type: "pdf",
-      buffer: true,
-      pdfOptions: options,
     };
 
     // const pdfNode = await import("pdf-node");

@@ -1,5 +1,7 @@
 const fs = require("fs");
 const path = require("path");
+const puppeteer = require("puppeteer-core");
+const chromium = require("@sparticuz/chromium");
 
 const crearPDFCotizacion = async (data, res) => {
   // Read HTML template
@@ -16,48 +18,30 @@ const crearPDFCotizacion = async (data, res) => {
     "utf8",
   );
 
-  // Tipografías//
-  const fontArialPath = path.join(process.cwd(), "fonts", "arial.ttf");
-  const fontArialBuffer = await fs.promises.readFile(fontArialPath);
-  const fontArialBase64 = fontArialBuffer.toString("base64");
-
-  // PDF options with fontconfig path
-  const options = {
-    format: "letter",
-    orientation: "portrait",
-    border: "10mm",
-    header: {
-      contents: header,
-      height: "22mm",
-    },
-    footer: {
-      height: "15mm",
-      contents: {
-        default: footer,
-      },
-    },
-    phantomPath: path.resolve(
-      process.cwd(),
-      "node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs",
-    ),
-  };
-
-  if (process.env.NODE_ENV === "production") {
-    options["childProcessOptions"] = {
-      env: {
-        ...process.env,
-        OPENSSL_CONF: "/dev/null",
-        LD_LIBRARY_PATH: path.join(process.cwd(), "fonts"),
-        FONTCONFIG_PATH: path.join(process.cwd(), "fonts"),
-      },
-    };
-  }
-
   try {
+    const executablePath = await chromium.executablePath();
+    const browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: executablePath,
+      headless: chromium.headless,
+    });
+    const page = await browser.newPage();
+    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true, // ¡Vital para que se impriman los colores de fondo de las tablas!
+      margin: {
+        top: "20px",
+        bottom: "20px",
+        left: "20px",
+        right: "20px",
+      },
+    });
+
     const document = {
       html: html,
       data: {
-        fontArialBase64,
         nro_cot: Intl.NumberFormat().format(1).padStart(3, "0"),
         client: {
           date: new Date().toLocaleDateString("es-CL"),
@@ -98,13 +82,13 @@ const crearPDFCotizacion = async (data, res) => {
       pdfOptions: options,
     };
 
-    const pdfNode = await import("pdf-node");
-    const result = await pdfNode.generatePDF(document);
+    // const pdfNode = await import("pdf-node");
+    // const result = await pdfNode.generatePDF(document);
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", 'inline; filename="MyFile.pdf"');
     res.setHeader("Content-Length", result.size);
-    return res.send(result.buffer);
+    return res.send(pdfBuffer);
   } catch (error) {
     console.error("PDF Generation Error:", error);
     return res.status(500).json({
@@ -112,7 +96,7 @@ const crearPDFCotizacion = async (data, res) => {
       details: error.message,
     });
   }
-};;
+};
 
 const formatToCLP = (number) => {
   return new Intl.NumberFormat("es-CL", {

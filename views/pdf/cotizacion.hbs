@@ -1,16 +1,20 @@
 <head>
   <style>
     @font-face {
-      font-family: 'Arial';
-      src: url(data:font/truetype;charset=utf-8;base64,{{fontArialBase64}}) format('truetype');
+      font-family: 'ArialCustom';
+      src: url('data:font/ttf;base64,{{fontArialBase64}}') format('truetype');
       font-weight: normal;
       font-style: normal;
     }
 
     * {
-      font-family: 'Arial', Helvetica, sans-serif;
-      font-size: 2.5mm;
-      line-height: 9pt;
+      font-family: 'ArialCustom', Helvetica, sans-serif;
+      font-size: 10px;
+      line-height: 1.2;
+
+      text-rendering: geometricPrecision;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     div#cotizacion {

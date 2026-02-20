@@ -2,7 +2,9 @@ include:
   - compose.override.yml
 services:
   node:
-    image: node:22
+    build:
+      context: .
+    image: mrc-node-local
     container_name: mrc-node
     restart: always
     user: "node"
@@ -24,6 +26,7 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - puppeteer-app
     command: bash -c "npm run dev"
   db:
     image: postgres:15.15
@@ -37,5 +40,19 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+  puppeteer-app:
+    image: ghcr.io/puppeteer/puppeteer:latest
+    container_name: puppeteer_service
+    volumes:
+      - .:/home/pptruser/app
+    working_dir: /home/pptruser/app
+    user: "pptruser"
+    command: bash -c "apt-get update && apt-get install -y libnspr4 libnss3 libxss1 libasound2 libgtk-3-0 libx11-xcb1 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libatk1.0-0 libpangocairo-1.0-0 libcups2 libgconf-2-4 ca-certificates fonts-liberation libappindicator3-1 libatk-bridge2.0-0 libx11-6 libxcb1 libxext6 libxfixes3 libxi6 xdg-utils && tail -f /dev/null"
+    environment:
+      - XDG_CONFIG_HOME=/tmp/.chromium
+      - XDG_CACHE_HOME=/tmp/.chromium
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+    ports:
+      - "8080:8080"
 volumes:
   pgdata:

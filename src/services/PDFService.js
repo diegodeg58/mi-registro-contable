@@ -84,7 +84,7 @@ const crearPDFCotizacion = async (data, res) => {
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", 'inline; filename="MyFile.pdf"');
-    res.setHeader("Content-Length", result.size);
+    res.setHeader("Content-Length", pdfBuffer.byteLength);
     return res.send(pdfBuffer);
   } catch (error) {
     console.error("PDF Generation Error:", error);

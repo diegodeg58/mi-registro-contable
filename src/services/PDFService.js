@@ -16,6 +16,11 @@ const crearPDFCotizacion = async (data, res) => {
     "utf8",
   );
 
+  // Tipografías//
+  const fontArialPath = path.join(process.cwd(), "fonts", "arial.ttf");
+  const fontArialBuffer = await fs.promises.readFile(fontArialPath);
+  const fontArialBase64 = fontArialBuffer.toString("base64");
+
   // PDF options with fontconfig path
   const options = {
     format: "letter",
@@ -38,7 +43,7 @@ const crearPDFCotizacion = async (data, res) => {
   };
 
   if (process.env.NODE_ENV === "production") {
-    options['childProcessOptions'] = {
+    options["childProcessOptions"] = {
       env: {
         ...process.env,
         OPENSSL_CONF: "/dev/null",
@@ -52,6 +57,7 @@ const crearPDFCotizacion = async (data, res) => {
     const document = {
       html: html,
       data: {
+        fontArialBase64,
         nro_cot: Intl.NumberFormat().format(1).padStart(3, "0"),
         client: {
           date: new Date().toLocaleDateString("es-CL"),
@@ -106,7 +112,7 @@ const crearPDFCotizacion = async (data, res) => {
       details: error.message,
     });
   }
-};
+};;
 
 const formatToCLP = (number) => {
   return new Intl.NumberFormat("es-CL", {

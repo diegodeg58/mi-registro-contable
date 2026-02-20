@@ -27,7 +27,7 @@ const crearPDFCotizacion = async (data, res) => {
       headless: chromium.headless,
     });
     const page = await browser.newPage();
-    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+    await page.setContent(html, { waitUntil: "networkidle0" });
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true, // ¡Vital para que se impriman los colores de fondo de las tablas!

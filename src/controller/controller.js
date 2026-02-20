@@ -2,7 +2,6 @@
 const fs = require("fs");
 const axios = require("axios").default;
 const moment = require("moment");
-const { v4 } = require("uuid");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -242,6 +241,7 @@ const getFinanza = async (req, res) => {
 };
 
 const postFinanza = async (req, res) => {
+  const { v4 } = await import("uuid");
   let datos = req.body;
 
   const id = v4().slice(0, 8);

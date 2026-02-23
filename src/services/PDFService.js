@@ -58,7 +58,7 @@ const crearPDFCotizacion = async (input, res) => {
   const fontRobotoPath = path.join(
     process.cwd(),
     "fonts",
-    "Roboto-VariableFont_wdth,wght.ttf",
+    "Roboto-Regular.ttf",
   );
   const fontRobotoBuffer = await fs.promises.readFile(fontRobotoPath);
   const fontRobotoBase64 = fontRobotoBuffer.toString("base64");

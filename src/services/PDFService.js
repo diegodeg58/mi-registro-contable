@@ -2,8 +2,9 @@ const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer-core");
 const chromium = require("@sparticuz/chromium");
+const handlebars = require("handlebars");
 
-const crearPDFCotizacion = async (data, res) => {
+const crearPDFCotizacion = async (input, res) => {
   // Read HTML template
   const html = await fs.promises.readFile(
     path.join(__dirname, "..", "..", "views", "pdf", "cotizacion.hbs"),
@@ -17,6 +18,45 @@ const crearPDFCotizacion = async (data, res) => {
     path.join(__dirname, "..", "..", "views", "pdf", "footer.hbs"),
     "utf8",
   );
+  const data = {
+    nro_cot: Intl.NumberFormat().format(1).padStart(3, "0"),
+    client: {
+      date: new Date().toLocaleDateString("es-CL"),
+      person: "Jonathan León",
+      name: "Warnermedia Chile Inversiones Limitada",
+      position: "Contralor",
+      address: "Pedro Montt 2354",
+      phone: "+56964041248",
+      city: "Santiago",
+      email: "jonathan.leon@wbd.com",
+      rut: "76109205-7",
+    },
+    detalles: [
+      {
+        line: 1,
+        qty: 100,
+        description:
+          "Lanyard de 90x2,5 cms cinta sublimada ambas caras, con mosqueton simple",
+        price: formatToCLP(2900),
+        total: formatToCLP(100 * 2900),
+      },
+    ],
+    totales: {
+      total_neto: formatToCLP(100 * 2900),
+      impuesto: formatToCLP(100 * 2900 * 0.1525),
+      total: formatToCLP(100 * 2900 + 100 * 2900 * 0.1525),
+    },
+    consideraciones: {
+      tipo_pago: "Crédito 30 días",
+      plazo_entrega: "15 días hábiles",
+      tipo_moneda: "Peso chileno",
+      fecha_valida: "10 días hábiles",
+      comentarios: "Algunos comentarios",
+    },
+  };
+
+  const template = handlebars.compile(html);
+  const rendered = template(data);
 
   try {
     const executablePath = await chromium.executablePath();
@@ -27,57 +67,14 @@ const crearPDFCotizacion = async (data, res) => {
       headless: chromium.headless,
     });
     const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "networkidle0" });
+    await page.setContent(rendered, { waitUntil: "networkidle0" });
     const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true, // ¡Vital para que se impriman los colores de fondo de las tablas!
-      margin: {
-        top: "20px",
-        bottom: "20px",
-        left: "20px",
-        right: "20px",
-      },
+      printBackground: true,
+      headerTemplate: header,
+      footerTemplate: footer,
+      displayHeaderFooter: true,
     });
-
-    const document = {
-      html: html,
-      data: {
-        nro_cot: Intl.NumberFormat().format(1).padStart(3, "0"),
-        client: {
-          date: new Date().toLocaleDateString("es-CL"),
-          person: "Jonathan León",
-          name: "Warnermedia Chile Inversiones Limitada",
-          position: "Contralor",
-          address: "Pedro Montt 2354",
-          phone: "+56964041248",
-          city: "Santiago",
-          email: "jonathan.leon@wbd.com",
-          rut: "76109205-7",
-        },
-        detalles: [
-          {
-            line: 1,
-            qty: 100,
-            description:
-              "Lanyard de 90x2,5 cms cinta sublimada ambas caras, con mosqueton simple",
-            price: formatToCLP(2900),
-            total: formatToCLP(100 * 2900),
-          },
-        ],
-        totales: {
-          total_neto: formatToCLP(100 * 2900),
-          impuesto: formatToCLP(100 * 2900 * 0.1525),
-          total: formatToCLP(100 * 2900 + 100 * 2900 * 0.1525),
-        },
-        consideraciones: {
-          tipo_pago: "Crédito 30 días",
-          plazo_entrega: "15 días hábiles",
-          tipo_moneda: "Peso chileno",
-          fecha_valida: "10 días hábiles",
-          comentarios: "Algunos comentarios",
-        },
-      },
-    };
+    await browser.close();
 
     // const pdfNode = await import("pdf-node");
     // const result = await pdfNode.generatePDF(document);

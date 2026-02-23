@@ -5,20 +5,14 @@ const chromium = require("@sparticuz/chromium");
 const handlebars = require("handlebars");
 
 const crearPDFCotizacion = async (input, res) => {
-  // Read HTML template
+  let template;
+  let data;
+  
   const html = await fs.promises.readFile(
     path.join(__dirname, "..", "..", "views", "pdf", "cotizacion.hbs"),
     "utf8",
   );
-  const header = await fs.promises.readFile(
-    path.join(__dirname, "..", "..", "views", "pdf", "header.hbs"),
-    "utf8",
-  );
-  const footer = await fs.promises.readFile(
-    path.join(__dirname, "..", "..", "views", "pdf", "footer.hbs"),
-    "utf8",
-  );
-  const data = {
+  data = {
     nro_cot: Intl.NumberFormat().format(1).padStart(3, "0"),
     client: {
       date: new Date().toLocaleDateString("es-CL"),
@@ -54,9 +48,30 @@ const crearPDFCotizacion = async (input, res) => {
       comentarios: "Algunos comentarios",
     },
   };
+  template = handlebars.compile(html);
+  const htmlRender = template(data);
 
-  const template = handlebars.compile(html);
-  const rendered = template(data);
+  const header = await fs.promises.readFile(
+    path.join(__dirname, "..", "..", "views", "pdf", "header.hbs"),
+    "utf8",
+  );
+  const fontRobotoPath = path.join(
+    process.cwd(),
+    "fonts",
+    "Roboto-VariableFont_wdth,wght.ttf",
+  );
+  const fontRobotoBuffer = await fs.promises.readFile(fontRobotoPath);
+  const fontRobotoBase64 = fontRobotoBuffer.toString("base64");
+  data = {
+    fontRobotoBase64
+  };
+  template = handlebars.compile(header);
+  const headerRender = template(data);
+
+  const footer = await fs.promises.readFile(
+    path.join(__dirname, "..", "..", "views", "pdf", "footer.hbs"),
+    "utf8",
+  );
 
   try {
     const executablePath = await chromium.executablePath();
@@ -67,7 +82,7 @@ const crearPDFCotizacion = async (input, res) => {
       headless: chromium.headless,
     });
     const page = await browser.newPage();
-    await page.setContent(rendered, { waitUntil: "networkidle0" });
+    await page.setContent(htmlRender, { waitUntil: "networkidle0" });
     const pdfBuffer = await page.pdf({
       margin: {
         top: "100px",
@@ -76,7 +91,7 @@ const crearPDFCotizacion = async (input, res) => {
         right: "20px",
       },
       printBackground: true,
-      headerTemplate: header,
+      headerTemplate: headerRender,
       footerTemplate: footer,
       displayHeaderFooter: true,
     });

@@ -7,7 +7,15 @@ const handlebars = require("handlebars");
 const crearPDFCotizacion = async (input, res) => {
   let template;
   let data;
-  
+
+  const fontRobotoPath = path.join(
+    process.cwd(),
+    "fonts",
+    "Roboto-Regular.ttf",
+  );
+  const fontRobotoBuffer = await fs.promises.readFile(fontRobotoPath);
+  const fontRobotoBase64 = fontRobotoBuffer.toString("base64");
+
   const html = await fs.promises.readFile(
     path.join(__dirname, "..", "..", "views", "pdf", "cotizacion.hbs"),
     "utf8",
@@ -55,15 +63,8 @@ const crearPDFCotizacion = async (input, res) => {
     path.join(__dirname, "..", "..", "views", "pdf", "header.hbs"),
     "utf8",
   );
-  const fontRobotoPath = path.join(
-    process.cwd(),
-    "fonts",
-    "Roboto-Regular.ttf",
-  );
-  const fontRobotoBuffer = await fs.promises.readFile(fontRobotoPath);
-  const fontRobotoBase64 = fontRobotoBuffer.toString("base64");
   data = {
-    fontRobotoBase64
+    fontRobotoBase64,
   };
   template = handlebars.compile(header);
   const headerRender = template(data);
@@ -72,11 +73,13 @@ const crearPDFCotizacion = async (input, res) => {
     path.join(__dirname, "..", "..", "views", "pdf", "footer.hbs"),
     "utf8",
   );
+  template = handlebars.compile(footer);
+  const footerRender = template(data);
 
   try {
     const executablePath = await chromium.executablePath();
     const browser = await puppeteer.launch({
-      args: [...chromium.args, '--font-render-hinting=none'],
+      args: [...chromium.args, "--font-render-hinting=none"],
       defaultViewport: chromium.defaultViewport,
       executablePath: executablePath,
       headless: chromium.headless,
@@ -92,7 +95,7 @@ const crearPDFCotizacion = async (input, res) => {
       },
       printBackground: true,
       headerTemplate: headerRender,
-      footerTemplate: footer,
+      footerTemplate: footerRender,
       displayHeaderFooter: true,
     });
     await browser.close();

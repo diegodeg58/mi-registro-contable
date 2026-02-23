@@ -1,12 +1,37 @@
 <style>
+  @font-face {
+    font-family: 'CustomRoboto';
+    src: url('data:font/ttf;base64,{{fontRobotoBase64}}') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  * {
+    font-family: 'CustomRoboto', sans-serif !important;
+    font-size: 12px;
+    /* Fuerza al navegador a no alterar el espaciado de la fuente */
+    font-kerning: normal;
+    letter-spacing: normal;
+    /* Propiedades de precisión que ya tenías */
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: none;
+    -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
   #footer {
     text-align: center;
     color: #666;
     font-size: 10px;
     position: fixed;
     bottom: 0;
-    width: 100vw;
+    width: 100%;
     display: block;
+    background-color: cyan;
+    -webkit-print-color-adjust: exact;
   }
 </style>
 <div id="footer">Diego Rojas - 2026</div>

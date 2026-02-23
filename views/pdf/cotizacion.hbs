@@ -1,16 +1,24 @@
 <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
   <style>
     * {
-      font-family: Arial;
       font-size: 14px;
       line-height: 1.2;
+      margin: 0;
+      padding: 0;
     }
 
-    body {
-      margin-top: 120px;
-      margin-left: 40pt;
-      margin-right: 40pt;
-      margin-bottom: 10pt;
+    .roboto-normal {
+      font-family: "Roboto", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 400;
+      font-style: normal;
+      font-variation-settings:
+        "wdth" 100;
     }
 
     div#cotizacion {
@@ -81,7 +89,7 @@
   </style>
 </head>
 
-<body>
+<body class="roboto-normal">
   <div id="cotizacion">
     Cotización Nº {{nro_cot}}
   </div>

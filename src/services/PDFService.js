@@ -69,6 +69,12 @@ const crearPDFCotizacion = async (input, res) => {
     const page = await browser.newPage();
     await page.setContent(rendered, { waitUntil: "networkidle0" });
     const pdfBuffer = await page.pdf({
+      margin: {
+        top: "100px",
+        bottom: "100px",
+        left: "20px",
+        right: "20px",
+      },
       printBackground: true,
       headerTemplate: header,
       footerTemplate: footer,

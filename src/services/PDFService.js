@@ -76,7 +76,7 @@ const crearPDFCotizacion = async (input, res) => {
   try {
     const executablePath = await chromium.executablePath();
     const browser = await puppeteer.launch({
-      args: chromium.args,
+      args: [...chromium.args, '--font-render-hinting=none'],
       defaultViewport: chromium.defaultViewport,
       executablePath: executablePath,
       headless: chromium.headless,

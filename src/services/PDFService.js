@@ -77,6 +77,10 @@ const crearPDFCotizacion = async (input, res) => {
   const footerRender = template(data);
 
   try {
+    const isVercel = process.env.VERCEL === "1";
+    if (isVercel) {
+      await chromium.font(fontRobotoPath);
+    }
     const executablePath = await chromium.executablePath();
     const browser = await puppeteer.launch({
       args: [...chromium.args, "--font-render-hinting=none"],

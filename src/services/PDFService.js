@@ -91,10 +91,10 @@ const crearPDFCotizacion = async (input, res) => {
     await page.setContent(htmlRender, { waitUntil: "networkidle0" });
     const pdfBuffer = await page.pdf({
       margin: {
-        top: "100px",
-        bottom: "100px",
-        left: "20px",
-        right: "20px",
+        top: "130px",
+        bottom: "130px",
+        left: "50px",
+        right: "50px",
       },
       printBackground: true,
       headerTemplate: header,

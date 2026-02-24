@@ -26,9 +26,12 @@
     }
 
     hr {
-      height: 0.1pt;
+      height: 1px;
       background: #000000;
-      border: 0 solid black;
+      color: black;
+      border: 0;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
     }
 
     table {
@@ -55,17 +58,23 @@
       text-transform: uppercase;
       font-size: 10pt;
       font-weight: 600;
+      margin-bottom: 1rem;
     }
 
     table#detalles {
       width: 100%;
-      margin-bottom: 10pt;
+      margin-bottom: 2rem;
     }
 
     table#detalles th,
     table#detalles td,
     table#totales th,
     table#totales td {
+      border: 1pt solid black;
+      padding: 3pt;
+    }
+
+    table#totales :is(th, td) {
       border: 1pt solid black;
       padding: 3pt;
     }
@@ -85,6 +94,10 @@
     table#consideraciones th,
     table#consideraciones td {
       padding: 2pt;
+    }
+
+    table#consideraciones th {
+      width: 30%;
     }
   </style>
 </head>
@@ -128,7 +141,7 @@
     </tbody>
     {{/with}}
   </table>
-  <hr style="margin-bottom: 10mm;">
+  <hr style="margin-bottom: 4rem">
 
   <h2>Tengo el agrado de presentarle el siguiente presupuesto</h2>
   <table id="detalles">
@@ -154,13 +167,14 @@
     </tbody>
   </table>
 
-  <table style="width: 100%;">
-    <td style="width: 50%">
+  <table style="width: 100%; margin-bottom: 2rem">
+    <td style="width: auto">
       {{#with consideraciones}}
       <table id="consideraciones">
         <thead>
           <tr>
-            <th colspan="2">Consideraciones generales</th>
+            <th colspan="2" style="font-size: 18px;">Consideraciones generales
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -188,7 +202,7 @@
       </table>
       {{/with}}
     </td>
-    <td style="width: 50%">
+    <td style="width: 35%">
       {{#with totales}}
       <table id="totales">
         <tr>

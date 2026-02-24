@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 const puppeteer = require("puppeteer-core");
 const chromium = require("@sparticuz/chromium");
 const handlebars = require("handlebars");
@@ -13,8 +14,17 @@ const crearPDFCotizacion = async (input, res) => {
     "fonts",
     "Roboto-Regular.ttf",
   );
-  const fontRobotoBuffer = await fs.promises.readFile(fontRobotoPath);
-  const fontRobotoBase64 = fontRobotoBuffer.toString("base64");
+  const installFonts = async () => {
+    const fontDir = path.join(os.tmpdir(), ".fonts");
+    if (!fs.existsSync(fontDir)) {
+      fs.mkdirSync(fontDir, { recursive: true });
+    }
+    const destPath = path.join(fontDir, "Roboto-Regular.ttf");
+    if (!fs.existsSync(destPath)) {
+      fs.copyFileSync(fontRobotoPath, destPath);
+    }
+  };
+  await installFonts();
 
   const html = await fs.promises.readFile(
     path.join(__dirname, "..", "..", "views", "pdf", "cotizacion.hbs"),
@@ -63,18 +73,11 @@ const crearPDFCotizacion = async (input, res) => {
     path.join(__dirname, "..", "..", "views", "pdf", "header.hbs"),
     "utf8",
   );
-  data = {
-    fontRobotoBase64,
-  };
-  template = handlebars.compile(header);
-  const headerRender = template(data);
 
   const footer = await fs.promises.readFile(
     path.join(__dirname, "..", "..", "views", "pdf", "footer.hbs"),
     "utf8",
   );
-  template = handlebars.compile(footer);
-  const footerRender = template(data);
 
   try {
     const executablePath = await chromium.executablePath();
@@ -94,8 +97,8 @@ const crearPDFCotizacion = async (input, res) => {
         right: "20px",
       },
       printBackground: true,
-      headerTemplate: headerRender,
-      footerTemplate: footerRender,
+      headerTemplate: header,
+      footerTemplate: footer,
       displayHeaderFooter: true,
     });
     await browser.close();

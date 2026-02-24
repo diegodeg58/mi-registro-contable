@@ -1,22 +1,15 @@
 <style>
-    @font-face {
-        font-family: 'CustomRoboto';
-        src: url(data:font/truetype;charset=utf-8;base64,{{fontRobotoBase64}}) format('truetype');
-        font-weight: normal;
-        font-style: normal;
-    }
-
     * {
-        font-family: 'CustomRoboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;;
+        /* Usamos 'Roboto' directamente, que es el nombre interno del archivo .ttf */
+        font-family: 'Roboto', Arial, sans-serif !important;
         font-size: 12px;
-        /* Fuerza al navegador a no alterar el espaciado de la fuente */
-        font-kerning: normal; 
-        letter-spacing: normal;
-        /* Propiedades de precisión que ya tenías */
-        text-rendering: geometricPrecision;
+        font-kerning: normal;
+        letter-spacing: 0px;
+        /* Forzamos a 0 para evitar variaciones */
+        text-rendering: optimizeLegibility;
+        /* Mejor que geometricPrecision para kerning */
         -webkit-font-smoothing: antialiased;
         -webkit-text-size-adjust: none;
-        -moz-osx-font-smoothing: grayscale;
         box-sizing: border-box;
         margin: 0;
         padding: 0;
@@ -29,7 +22,7 @@
         -webkit-print-color-adjust: exact;
         width: 100%;
         /* Usar un line-height relativo ayuda a la consistencia vertical */
-        line-height: 1.2; 
+        line-height: 1.2;
     }
 </style>
 

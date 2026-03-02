@@ -142,16 +142,20 @@
     addRow();
   }
 
-  const hasDataInRow = row => {
+  const rowIsEmpty = row => {
+    return !rowHasInput(row);
+  }
+
+  const rowHasInput = row => {
     let bool = false;
     const childrenInput = row.find('input:not([disabled])');
     childrenInput.each((index, input) => {
-      if($(input).val() != '') bool = true;
+      if ($(input).val() != '') bool = true;
     })
     return bool;
   }
 
-  const hasAllFieldsWithData = row => {
+  const rowIsFull = row => {
     let bool = true;
     const childrenInput = row.find('input:not([disabled])');
     childrenInput.each((index, input) => {
@@ -170,12 +174,12 @@
   });
 
   $('#table-detalles').on('blur', 'input', (event) => {
-    const target = $(event.currentTarget);
-    const row = target.parents('tr');
-    const hasSomeInput = hasDataInRow(row);
-    const hasAllInput = hasAllFieldsWithData(row);
-    const hasSiblings = hasRowSiblings(row);
-    if (hasAllInput) addRow();
-    if (!hasSomeInput && hasSiblings) row.remove();
+    const rows = $('#table-detalles tbody tr');
+    const lastRow = rows.last();
+    const currentRow = $(event.currentTarget).parents('tr');
+
+    if (rowIsFull(currentRow) && rowHasInput(lastRow)) addRow();
+    if (rowIsEmpty(currentRow) && hasRowSiblings(currentRow))
+      currentRow.remove();
   })
 </script>

@@ -34,93 +34,50 @@
             aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <div class="form-check">
+            <h6>Cliente</h6>
+            <input class="form-check-input" type="checkbox" value=""
+              id="check-client">
+            <label class="form-check-label" for="check-client">
+              Nuevo cliente
+            </label>
+          </div>
+          <form id="existing-client">
+            <select name="client-id" id="client-id" class="form-select"
+              required>
+            </select>
+          </form>
+          <hr>
           <form id="form-cotizacion">
-            <div class="mb-3">
-              <label for="name" class="form-label">Razón social /
-                Cliente</label>
-              <input type="text" class="form-control" name="name" id="name"
-                required>
-            </div>
-            <div class="row">
-              <div class="col">
-                <div class="mb-3">
-                  <label for="person" class="form-label">Atención</label>
-                  <input type="text" class="form-control" name="person"
-                    id="person">
-                </div>
-              </div>
-              <div class="col">
-                <div class="mb-3">
-                  <label for="position" class="form-label">Cargo</label>
-                  <input type="text" class="form-control" name="position"
-                    id="position">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <div class="mb-3">
-                  <label for="address" class="form-label">Dirección</label>
-                  <input type="text" class="form-control" name="address"
-                    id="address">
-                </div>
-              </div>
-              <div class="col">
-                <div class="mb-3">
-                  <label for="phone" class="form-label">Teléfono</label>
-                  <input type="text" class="form-control" name="phone"
-                    id="phone">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <div class="mb-3">
-                  <label for="city" class="form-label">Ciudad</label>
-                  <input type="text" class="form-control" name="city" id="city">
-                </div>
-              </div>
-              <div class="col">
-                <div class="mb-3">
-                  <label for="rut" class="form-label">RUT</label>
-                  <input type="text" class="form-control" name="rut" id="rut">
-                </div>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" name="email" id="email">
-            </div>
+            <h6>Condiciones</h6>
             <h6>Detalles</h6>
-            <div class="mb-3">
-              <table id="table-detalles" class="table">
-                <thead>
-                  <tr>
-                    <th>Detalle</th>
-                    <th>Cantidad</th>
-                    <th>Precio</th>
-                    <th>Total</th>
-                    <th>Borrar</th>
-                  </tr>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
-            </div>
+            <table id="table-detalles" class="table">
+              <thead>
+                <tr>
+                  <th>Detalle</th>
+                  <th>Cantidad</th>
+                  <th>Precio</th>
+                  <th>Total</th>
+                  <th>Borrar</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary"
             data-bs-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-primary"
-            id="btn-submit">Guardar</button>
+            id="btn-submit">Aceptar</button>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<div class="d-none">
+<div id="hidden-stuff" class="d-none">
   <table>
     <tbody>
       <tr id="row-details">
@@ -141,9 +98,65 @@
       </tr>
     </tbody>
   </table>
+  <form id="new-client">
+    <div class="mb-3">
+      <label for="name" class="form-label">Razón social /
+        Cliente</label>
+      <input type="text" class="form-control" name="name" id="name" required>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label for="person" class="form-label">Atención</label>
+          <input type="text" class="form-control" name="person" id="person">
+        </div>
+      </div>
+      <div class="col">
+        <div class="mb-3">
+          <label for="position" class="form-label">Cargo</label>
+          <input type="text" class="form-control" name="position" id="position">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label for="address" class="form-label">Dirección</label>
+          <input type="text" class="form-control" name="address" id="address">
+        </div>
+      </div>
+      <div class="col">
+        <div class="mb-3">
+          <label for="phone" class="form-label">Teléfono</label>
+          <input type="text" class="form-control" name="phone" id="phone">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label for="city" class="form-label">Ciudad</label>
+          <input type="text" class="form-control" name="city" id="city">
+        </div>
+      </div>
+      <div class="col">
+        <div class="mb-3">
+          <label for="rut" class="form-label">RUT</label>
+          <input type="text" class="form-control" name="rut" id="rut">
+        </div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" name="email" id="email">
+    </div>
+  </form>
 </div>
 
 <script type="module">
+  ///////////
+  //Functions
+  ///////////
   const addRow = () => {
     $('#row-details').clone().removeAttr('id')
       .appendTo('#table-detalles tbody');
@@ -184,6 +197,9 @@
     return row.siblings().length > 0;
   };
 
+  ////////////////
+  //Event handlers
+  ////////////////
   $('#modal-form').on('show.bs.modal', () => {
     resetClient();
     resetDetails();
@@ -209,11 +225,23 @@
     currentRow.remove();
   });
 
-  $('#btn-submit').on('click', () => $('form').trigger('submit'));
+  $('#btn-submit').on('click', () =>
+    $('#formulario form').first().trigger('submit'));
 
-  $('form').on('submit', (event) => {
+  $('#existing-client').on('submit', event => {
     event.preventDefault();
+    const validity = event.target.reportValidity();
+    if (!validity) return;
+  });
 
+  $('#new-client').on('submit', event => {
+    event.preventDefault();
+    const validity = event.target.reportValidity();
+    if (!validity) return;
+  });
+
+  $('#form-cotizacion').on('submit', (event) => {
+    event.preventDefault();
     let rows = $('#table-detalles tbody tr');
     let lastRow = rows.last();
     if (!rowHasInput(lastRow)) lastRow.remove();
@@ -221,12 +249,26 @@
     const validity = event.target.reportValidity();
     rows = $('#table-detalles tbody tr');
     lastRow = rows.last();
-    if (!validity && rowIsFull(lastRow)) { addRow(); return; }
+    if (!validity || rows.length == 0) {
+      addRow();
+      return;
+    }
 
     const object = $('form').serializeJSON();
     object.details = object.details.slice(0, -1);
     console.log(object);
 
+  });
+
+  $('#check-client').on('change', (event) => {
+    const isChecked = $(event.target).is(':checked');
+    if (isChecked) {
+      $('#new-client').insertAfter('#existing-client');
+      $('#existing-client').appendTo('#hidden-stuff');
+    } else {
+      $('#existing-client').insertAfter('#new-client');
+      $('#new-client').appendTo('#hidden-stuff');
+    }
   });
 
 </script>

@@ -8,7 +8,7 @@ const path = require('path');
 require('dotenv').config()
 
 //Rutas
-const routes = require("./routes/routes.js");
+const routes = require("./src/routes/routes.js");
 
 const app = express();
 app.use(express.json()); //Para CRUD con JSON

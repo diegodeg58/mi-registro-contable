@@ -38,19 +38,22 @@
             <div class="mb-3">
               <label for="name" class="form-label">Razón social /
                 Cliente</label>
-              <input type="text" class="form-control" id="name">
+              <input type="text" class="form-control" name="name" id="name"
+                required>
             </div>
             <div class="row">
               <div class="col">
                 <div class="mb-3">
                   <label for="person" class="form-label">Atención</label>
-                  <input type="text" class="form-control" id="person">
+                  <input type="text" class="form-control" name="person"
+                    id="person">
                 </div>
               </div>
               <div class="col">
                 <div class="mb-3">
                   <label for="position" class="form-label">Cargo</label>
-                  <input type="text" class="form-control" id="position">
+                  <input type="text" class="form-control" name="position"
+                    id="position">
                 </div>
               </div>
             </div>
@@ -58,13 +61,15 @@
               <div class="col">
                 <div class="mb-3">
                   <label for="address" class="form-label">Dirección</label>
-                  <input type="text" class="form-control" id="address">
+                  <input type="text" class="form-control" name="address"
+                    id="address">
                 </div>
               </div>
               <div class="col">
                 <div class="mb-3">
                   <label for="phone" class="form-label">Teléfono</label>
-                  <input type="text" class="form-control" id="phone">
+                  <input type="text" class="form-control" name="phone"
+                    id="phone">
                 </div>
               </div>
             </div>
@@ -72,19 +77,19 @@
               <div class="col">
                 <div class="mb-3">
                   <label for="city" class="form-label">Ciudad</label>
-                  <input type="text" class="form-control" id="city">
+                  <input type="text" class="form-control" name="city" id="city">
                 </div>
               </div>
               <div class="col">
                 <div class="mb-3">
                   <label for="rut" class="form-label">RUT</label>
-                  <input type="text" class="form-control" id="rut">
+                  <input type="text" class="form-control" name="rut" id="rut">
                 </div>
               </div>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email">
+              <input type="email" class="form-control" name="email" id="email">
             </div>
             <h6>Detalles</h6>
             <div class="mb-3">
@@ -107,7 +112,8 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary"
             data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-primary"
+            id="btn-submit">Guardar</button>
         </div>
       </div>
     </div>
@@ -118,13 +124,20 @@
   <table>
     <tbody>
       <tr id="row-details">
-        <td style="width: auto;"><input type="text" class="form-control"></td>
-        <td style="width: 10%;"><input type="number" class="form-control"></td>
-        <td style="width: 15%;"><input type="number" class="form-control"></td>
+        <td style="width: auto;"><input type="text"
+            class="form-control detail-desc" name="details[][description]"
+            required></td>
+        <td style="width: 10%;"><input type="number"
+            class="form-control detail-qty" name="details[][qty]:number"
+            required></td>
+        <td style="width: 15%;"><input type="number"
+            class="form-control detail-price" name="details[][price]:number"
+            required></td>
         <td style="width: 15%;"><input type="text" class="form-control"
             disabled>
         </td>
-        <td style="width: 15%;"></td>
+        <td style="width: 15%;"><button type="button" class="btn btn-warning"
+            disabled>X</button></td>
       </tr>
     </tbody>
   </table>
@@ -132,19 +145,22 @@
 
 <script type="module">
   const addRow = () => {
-    $('#row-details').clone().removeAttr('id').appendTo('#table-detalles tbody');
-  }
+    $('#row-details').clone().removeAttr('id')
+      .appendTo('#table-detalles tbody');
+  };
+
   const resetClient = () => {
     $('#form-cotizacion input').val('');
-  }
+  };
+
   const resetDetails = () => {
     $('#table-detalles tbody').empty();
     addRow();
-  }
+  };
 
   const rowIsEmpty = row => {
     return !rowHasInput(row);
-  }
+  };
 
   const rowHasInput = row => {
     let bool = false;
@@ -153,7 +169,7 @@
       if ($(input).val() != '') bool = true;
     })
     return bool;
-  }
+  };
 
   const rowIsFull = row => {
     let bool = true;
@@ -162,24 +178,55 @@
       if ($(input).val() == '') bool = false;
     })
     return bool;
-  }
+  };
 
   const hasRowSiblings = row => {
     return row.siblings().length > 0;
-  }
+  };
 
   $('#modal-form').on('show.bs.modal', () => {
     resetClient();
     resetDetails();
   });
 
-  $('#table-detalles').on('blur', 'input', (event) => {
+  $('#table-detalles').on('input', 'input', (event) => {
     const rows = $('#table-detalles tbody tr');
     const lastRow = rows.last();
     const currentRow = $(event.currentTarget).parents('tr');
 
-    if (rowIsFull(currentRow) && rowHasInput(lastRow)) addRow();
-    if (rowIsEmpty(currentRow) && hasRowSiblings(currentRow))
-      currentRow.remove();
-  })
+    currentRow.find('button').prop('disabled', !rowIsFull(currentRow));
+
+    if (rowIsFull(currentRow) && rowHasInput(lastRow)) {
+      addRow();
+    };
+
+    if (rowIsEmpty(currentRow) && hasRowSiblings(currentRow)
+      && !currentRow.is(lastRow)) currentRow.remove();
+  });
+
+  $('#table-detalles').on('click', 'button', (event) => {
+    const currentRow = $(event.currentTarget).parents('tr');
+    currentRow.remove();
+  });
+
+  $('#btn-submit').on('click', () => $('form').trigger('submit'));
+
+  $('form').on('submit', (event) => {
+    event.preventDefault();
+
+    let rows = $('#table-detalles tbody tr');
+    let lastRow = rows.last();
+    if (!rowHasInput(lastRow)) lastRow.remove();
+
+    const validity = event.target.reportValidity();
+    rows = $('#table-detalles tbody tr');
+    lastRow = rows.last();
+    if (!validity && rowIsFull(lastRow)) { addRow(); return; }
+
+    const object = $('form').serializeJSON();
+    object.details = object.details.slice(0, -1);
+    console.log(object);
+
+  });
+
 </script>

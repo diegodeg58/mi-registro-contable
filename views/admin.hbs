@@ -50,6 +50,51 @@
           <hr>
           <form id="form-cotizacion">
             <h6>Condiciones</h6>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3">
+                  <label for="pay_method" class="form-label">Forma de
+                    pago</label>
+                  <input type="text" class="form-control" name="pay_method"
+                    id="pay_method">
+                </div>
+              </div>
+              <div class="col">
+                <div class="mb-3">
+                  <label for="delivery_time" class="form-label">Plazo de
+                    entrega (días)</label>
+                  <input type="number" class="form-control"
+                    name="delivery_time:number" id="delivery_time">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3">
+                  <label for="currency" class="form-label">Moneda</label>
+                  <input type="text" class="form-control" name="currency"
+                    id="currency" minlength="3" maxlength="3" value="CLP"
+                    placeholder="CLP">
+                </div>
+              </div>
+              <div class="col">
+                <div class="mb-3">
+                  <label for="valid_time" class="form-label">Válida
+                    hasta (días)</label>
+                  <input type="number" class="form-control"
+                    name="valid_time:number" id="valid_time" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3">
+                  <label for="comments" class="form-label">Comentarios</label>
+                  <input type="text" class="form-control" name="comments"
+                    id="comments">
+                </div>
+              </div>
+            </div>
             <h6>Detalles</h6>
             <table id="table-detalles" class="table">
               <thead>
@@ -143,7 +188,7 @@
       <div class="col">
         <div class="mb-3">
           <label for="rut" class="form-label">RUT</label>
-          <input type="text" class="form-control" name="rut" id="rut">
+          <input type="text" class="form-control" name="rut" id="rut" required>
         </div>
       </div>
     </div>
@@ -177,6 +222,7 @@
   };
 
   const resetDetails = () => {
+    $('#form-cotizacion input').val('');
     $('#table-detalles tbody').empty();
     addRow();
   };
@@ -282,8 +328,16 @@
     const object = $('#form-cotizacion').serializeJSON();
     object.details = object.details.slice(0, -1);
     object.rut = rut;
-    console.log(object);
 
+    processRequestButton($('#btn-submit'), $.post({
+      url: '/api/v1/cotizaciones',
+      contentType: 'application/json',
+      data: JSON.stringify(object)
+    }), success => bootstrap.Modal.getInstance('#modal-form').hide(),
+      error => {
+        console.error(error);
+        alert(error.responseJSON.message);
+      })
   });
 
   $('#check-client').on('change', (event) => {

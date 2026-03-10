@@ -35,3 +35,7 @@ const appendAlert = (message, type) => {
   $("#liveAlertPlaceholder").html(alert);
   $("#liveAlertPlaceholder").removeClass("d-none");
 };
+
+$.serializeJSON.defaultBaseOptions.defaultTypes.string = (str) => {
+  return str.length === 0 ? null : String(str);
+}

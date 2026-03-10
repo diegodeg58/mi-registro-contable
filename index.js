@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 
 //Variables de entorno
-require('dotenv').config()
+require('dotenv').config({quiet: true});
 
 //Rutas
 const routes = require("./src/routes/routes.js");

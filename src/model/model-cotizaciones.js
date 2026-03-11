@@ -20,6 +20,38 @@ prodDBConfig = {
 const pool = new Pool(production ? prodDBConfig : devDBConfig);
 
 module.exports = {
+  getCotizaciones: async () => {
+    const result = await pool.query(
+      `SELECT c.id, c.timestamp, cl.rut, cl.name
+      FROM cotizacion c
+      INNER JOIN clientes cl ON cl.id = c.id_client
+      `,
+    );
+    return result.rows;
+  },
+  getFullCotizacionByID: async (id) => {
+    const resultCot = await pool.query(
+      `SELECT c.pay_method, c.delivery_time, c.currency, 
+      c.valid_time, c.comments, c.timestamp, 
+      cl.rut, cl.name, cl.person, cl.position, cl.phone, 
+      cl.email, cl.city, cl.address, c.id
+      FROM cotizacion c
+      INNER JOIN clientes cl ON cl.id = c.id_client
+      WHERE c.id = $1
+      LIMIT 1
+      `,
+      [id],
+    );
+    const resultDet = await pool.query(
+      `SELECT line, description, qty, price::numeric::integer, 
+      (qty * price)::numeric::integer AS total
+      FROM cot_details
+      WHERE id_cotizacion = $1`,
+      [id],
+    );
+    const result = { ...resultCot.rows[0], details: resultDet.rows };
+    return result;
+  },
   postCotizacion: async (data) => {
     const client = await pool.connect();
     try {
@@ -27,7 +59,7 @@ module.exports = {
         "SELECT id FROM clientes WHERE rut = $1 LIMIT 1",
         [data.rut],
       );
-      
+
       const id = res.rows[0].id;
 
       await client.query("BEGIN");

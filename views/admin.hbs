@@ -19,8 +19,21 @@
   <h1 class="text-center">Cotizaciones</h1>
   <div class="container d-grid gap-2">
     {{!-- <a class="btn btn-primary" role="button" href="/crear">Crear</a> --}}
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
       data-bs-target="#modal-form">Crear cotización</button>
+  </div>
+  <div class="container">
+    <table class="table table-striped text-center" id="table-cotizaciones">
+      <thead>
+        <tr>
+          <th style="width: 20%">Fecha</th>
+          <th style="width: 15%">RUT</th>
+          <th style="width: auto">Nombre</th>
+          <th style="width: 15%">PDF</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 </section>
 
@@ -126,18 +139,32 @@
   <option value="" id="option-client"></option>
   <table>
     <tbody>
+      <tr id="row-cotizaciones">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><a type="button" class="btn btn-secondary btn-sm"
+            target="_blank">PDF</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <tbody>
       <tr id="row-details">
-        <td style="width: auto;"><input type="text"
-            class="form-control detail-desc" name="details[][description]"
-            required></td>
-        <td style="width: 10%;"><input type="number"
-            class="form-control detail-qty" name="details[][qty]:number"
-            required></td>
-        <td style="width: 15%;"><input type="number"
-            class="form-control detail-price" name="details[][price]:number"
-            required></td>
-        <td style="width: 15%;"><input type="text" class="form-control"
-            disabled>
+        <td style="width: auto;">
+          <input type="text" class="form-control detail-desc"
+            name="details[][description]" required>
+        </td>
+        <td style="width: 10%;">
+          <input type="number" class="form-control detail-qty"
+            name="details[][qty]:number" required>
+        </td>
+        <td style="width: 15%;">
+          <input type="number" class="form-control detail-price"
+            name="details[][price]:number" required>
+        </td>
+        <td style="width: 15%;">
+          <input type="text" class="form-control" disabled>
         </td>
         <td style="width: 15%;"><button type="button" class="btn btn-warning"
             disabled>X</button></td>
@@ -203,11 +230,31 @@
   ///////////
   //AJAX Init
   ///////////
-  window.clientes = await $.getJSON('api/v1/clientes');
-  clientes.forEach(cliente => {
-    $('#option-client').clone().removeAttr('id').val(cliente.rut)
-      .text(`${cliente.rut} - ${cliente.name}`).appendTo('#existing-client select');
-  })
+  const initClientes = async () => {
+    const clientes = await $.getJSON('api/v1/clientes');
+    clientes.forEach(cliente => {
+      $('#option-client').clone().removeAttr('id').val(cliente.rut)
+        .text(`${cliente.rut} - ${cliente.name}`)
+        .appendTo('#existing-client select');
+    });
+  }
+  const initCotizaciones = async () => {
+    const cotizaciones = await $.getJSON('api/v1/cotizaciones');
+    cotizaciones.forEach(cot => {
+      const timestamp = new Date(Date.parse(cot.timestamp));
+      const timeString = timestamp.toLocaleString('es-CL');
+
+      const row = $('#row-cotizaciones').clone().removeAttr('id');
+      const firstCell = row.children().first().text(timeString);
+      const secondCell = firstCell.next().text(cot.rut);
+      const thirdCell = secondCell.next().text(cot.name);
+      const button = thirdCell.next().children('a');
+      button.prop('href', `api/v1/cotizaciones/${cot.id}/pdf`);
+      row.appendTo('#table-cotizaciones tbody');
+    })
+  }
+  initClientes();
+  initCotizaciones();
 
   ///////////
   //Functions
@@ -333,7 +380,10 @@
       url: '/api/v1/cotizaciones',
       contentType: 'application/json',
       data: JSON.stringify(object)
-    }), success => bootstrap.Modal.getInstance('#modal-form').hide(),
+    }), success => {
+      bootstrap.Modal.getInstance('#modal-form').hide();
+      initCotizaciones();
+    },
       error => {
         console.error(error);
         alert(error.responseJSON.message);

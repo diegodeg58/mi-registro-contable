@@ -6,9 +6,6 @@ const chromium = require("@sparticuz/chromium");
 const handlebars = require("handlebars");
 
 const crearPDFCotizacion = async (input, res) => {
-  let template;
-  let data;
-
   const fontRobotoPath = path.join(
     process.cwd(),
     "fonts",
@@ -30,7 +27,7 @@ const crearPDFCotizacion = async (input, res) => {
     path.join(__dirname, "..", "..", "views", "pdf", "cotizacion.hbs"),
     "utf8",
   );
-  data = {
+  const data = {
     nro_cot: Intl.NumberFormat().format(1).padStart(3, "0"),
     client: {
       date: new Date().toLocaleDateString("es-CL"),
@@ -66,8 +63,8 @@ const crearPDFCotizacion = async (input, res) => {
       comentarios: "Algunos comentarios",
     },
   };
-  template = handlebars.compile(html);
-  const htmlRender = template(data);
+  const template = handlebars.compile(html);
+  const htmlRender = template(input);
 
   const header = await fs.promises.readFile(
     path.join(__dirname, "..", "..", "views", "pdf", "header.hbs"),
@@ -128,4 +125,5 @@ const formatToCLP = (number) => {
 
 module.exports = {
   crearPDFCotizacion,
+  formatToCLP,
 };

@@ -36,7 +36,7 @@ router.get("/:id", async (req, res) => {
 router.get("/:id/pdf", async (req, res) => {
   let cot = await model.getFullCotizacionByID(req.params.id);
   cot = {
-    nro_cot: String(cot.id).padStart(3, "0"),
+    nro_cot: String(cot.correlativo).padStart(3, "0"),
     client: {
       date: new Date(Date.parse(cot.timestamp)).toLocaleDateString("es-CL"),
       person: cot.person,

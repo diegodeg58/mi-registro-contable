@@ -25,6 +25,7 @@ module.exports = {
       `SELECT c.id, c.timestamp, cl.rut, cl.name
       FROM cotizacion c
       INNER JOIN clientes cl ON cl.id = c.id_client
+      ORDER BY c.id
       `,
     );
     return result.rows;
@@ -34,7 +35,7 @@ module.exports = {
       `SELECT c.pay_method, c.delivery_time, c.currency, 
       c.valid_time, c.comments, c.timestamp, 
       cl.rut, cl.name, cl.person, cl.position, cl.phone, 
-      cl.email, cl.city, cl.address, c.id
+      cl.email, cl.city, cl.address, c.id, c.correlativo
       FROM cotizacion c
       INNER JOIN clientes cl ON cl.id = c.id_client
       WHERE c.id = $1
@@ -55,17 +56,21 @@ module.exports = {
   postCotizacion: async (data) => {
     const client = await pool.connect();
     try {
-      let res = await client.query(
+      let res;
+      res = await client.query("SELECT COUNT(*) FROM cotizacion");
+      const count = Number(res.rows[0].count);
+
+      res = await client.query(
         "SELECT id FROM clientes WHERE rut = $1 LIMIT 1",
         [data.rut],
       );
-
       const id = res.rows[0].id;
 
       await client.query("BEGIN");
       const insertCotizacionText = `INSERT INTO cotizacion 
-      (id_client, pay_method, delivery_time, currency, valid_time, comments)
-      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
+      (id_client, pay_method, delivery_time, currency, valid_time, comments, 
+      correlativo)
+      VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
       const insertCotizacionValues = [
         id,
         data.pay_method,
@@ -73,6 +78,7 @@ module.exports = {
         data.currency,
         data.valid_time + " day",
         data.comments,
+        count + 1
       ];
       res = await client.query(insertCotizacionText, insertCotizacionValues);
       const idCot = res.rows[0].id;

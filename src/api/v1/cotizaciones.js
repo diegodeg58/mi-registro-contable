@@ -75,7 +75,7 @@ router.get("/:id/pdf", async (req, res) => {
     },
     consideraciones: {
       tipo_pago: cot.pay_method,
-      plazo_entrega: `${cot.delivery_time.days} días hábiles`,
+      plazo_entrega: `${cot.delivery_time.days ?? 0} días hábiles`,
       tipo_moneda: cot.currency,
       fecha_valida: `${cot.valid_time.days} días hábiles`,
       comentarios: cot.comments,

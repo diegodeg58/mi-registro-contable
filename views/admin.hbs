@@ -123,6 +123,27 @@
               </tbody>
             </table>
           </form>
+          <table id="table-total" class="table">
+            <thead>
+              <tr>
+                <th>Total neto</th>
+                <th>Impuesto (15.25%)</th>
+                <th>Total bruto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input id="total-neto" type="text" class="form-control"
+                    disabled>
+                </td>
+                <td><input id="impuesto" type="text" class="form-control"
+                    disabled>
+                </td>
+                <td><input id="total-bruto" type="text" class="form-control"
+                    disabled></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary"
@@ -164,7 +185,7 @@
             name="details[][price]:number" required>
         </td>
         <td style="width: 15%;">
-          <input type="text" class="form-control" disabled>
+          <input type="text" class="form-control detail-total" disabled>
         </td>
         <td style="width: 15%;"><button type="button" class="btn btn-warning"
             disabled>X</button></td>
@@ -238,6 +259,7 @@
         .appendTo('#existing-client select');
     });
   }
+
   const initCotizaciones = async () => {
     const cotizaciones = await $.getJSON('api/v1/cotizaciones');
     $('#table-cotizaciones tbody').empty();
@@ -254,8 +276,6 @@
       row.appendTo('#table-cotizaciones tbody');
     })
   }
-  initClientes();
-  initCotizaciones();
 
   ///////////
   //Functions
@@ -275,10 +295,12 @@
     addRow();
   };
 
+  /** @param {JQuery} row */
   const rowIsEmpty = row => {
     return !rowHasInput(row);
   };
 
+  /** @param {JQuery} row */
   const rowHasInput = row => {
     let bool = false;
     const childrenInput = row.find('input:not([disabled])');
@@ -288,6 +310,7 @@
     return bool;
   };
 
+  /** @param {JQuery} row */
   const rowIsFull = row => {
     let bool = true;
     const childrenInput = row.find('input:not([disabled])');
@@ -297,50 +320,69 @@
     return bool;
   };
 
+  /** @param {JQuery} row */
   const hasRowSiblings = row => {
     return row.siblings().length > 0;
   };
 
-  ////////////////
-  //Event handlers
-  ////////////////
-  $('#modal-form').on('show.bs.modal', () => {
+  ///////////
+  //Callbacks
+  ///////////
+  const modalShowEvent = () => {
     resetClient();
     resetDetails();
-  });
+  };
 
-  $('#table-detalles').on('input', 'input', (event) => {
+  /** @param {JQueryEventObject} event */
+  const tableDetallesInputEvent = event => {
     const rows = $('#table-detalles tbody tr');
     const lastRow = rows.last();
     const currentRow = $(event.currentTarget).parents('tr');
 
     currentRow.find('button').prop('disabled', !rowIsFull(currentRow));
-
-    if (rowIsFull(currentRow) && rowHasInput(lastRow)) {
-      addRow();
-    };
-
+    if (rowIsFull(currentRow) && rowHasInput(lastRow)) addRow();
     if (rowIsEmpty(currentRow) && hasRowSiblings(currentRow)
       && !currentRow.is(lastRow)) currentRow.remove();
-  });
+  }
 
-  $('#table-detalles').on('click', 'button', (event) => {
+  /** @param {JQueryEventObject} event */
+  const tableDetallesNumberInputEvent = event => {
+    const currentRow = $(event.currentTarget).parents('tr');
+    const qty = Number(currentRow.find("input.detail-qty").val());
+    const price = Number(currentRow.find("input.detail-price").val());
+
+    currentRow.find("input.detail-total").val(qty * price);
+
+    let total = 0;
+    $('#table-detalles input.detail-total').each((index, element) =>
+      total += Number($(element).val()));
+    $('#total-neto').val(total);
+    $('#impuesto').val(Math.round(total * 0.1525));
+    $('#total-bruto').val(Math.round(total * 1.1525));
+  }
+
+  /** @param {JQueryEventObject} event */
+  const tableDetallesClickEvent = event => {
     const currentRow = $(event.currentTarget).parents('tr');
     currentRow.remove();
-  });
+  }
 
-  $('#btn-submit').on('click', () =>
-    $('#formulario form').first().trigger('submit'));
+  /** @param {JQueryEventObject} event */
+  const btnSubmitClickEvent = event => {
+    $('#formulario form').first().trigger('submit');
+  }
 
-  $('#existing-client').on('submit', event => {
+  /** @param {JQueryEventObject} event */
+  const existingClientSubmitEvent = event => {
     event.preventDefault();
     const validity = event.target.reportValidity();
     if (!validity) return;
     const rut = $('#existing-client select').val();
     $('#form-cotizacion').trigger('submit', rut);
-  });
+  }
 
-  $('#new-client').on('submit', event => {
+  /** @param {JQueryEventObject} event */
+  const newClientSubmitEvent = event => {
     event.preventDefault();
     const form = event.target;
     const validity = form.reportValidity();
@@ -357,9 +399,13 @@
         console.error(error);
         alert(error.responseJSON.message);
       })
-  });
+  }
 
-  $('#form-cotizacion').on('submit', (event, rut) => {
+  /** 
+  @param {JQueryEventObject} event 
+  @param {string} rut
+  */
+  const formCotizacionSubmitEvent = (event, rut) => {
     event.preventDefault();
     let rows = $('#table-detalles tbody tr');
     let lastRow = rows.last();
@@ -388,9 +434,10 @@
         console.error(error);
         alert(error.responseJSON.message);
       })
-  });
+  }
 
-  $('#check-client').on('change', (event) => {
+  /** @param {JQueryEventObject} event */
+  const checkClientChangeEvent = event => {
     const isChecked = $(event.target).is(':checked');
     if (isChecked) {
       $('#new-client').insertAfter('#existing-client');
@@ -399,6 +446,26 @@
       $('#existing-client').insertAfter('#new-client');
       $('#new-client').appendTo('#hidden-stuff');
     }
-  });
+  }
+
+  ////////////////
+  //Event handlers
+  ////////////////
+  $('#modal-form').on('show.bs.modal', modalShowEvent);
+  $('#table-detalles').on('input', 'input', tableDetallesInputEvent);
+  $('#table-detalles').on('input', 'input.detail-qty, input.detail-price',
+    tableDetallesNumberInputEvent);
+  $('#table-detalles').on('click', 'button', tableDetallesClickEvent);
+  $('#btn-submit').on('click', btnSubmitClickEvent);
+  $('#existing-client').on('submit', existingClientSubmitEvent);
+  $('#new-client').on('submit', newClientSubmitEvent);
+  $('#form-cotizacion').on('submit', formCotizacionSubmitEvent);
+  $('#check-client').on('change', checkClientChangeEvent);
+
+  //////
+  //INIT
+  //////
+  initClientes();
+  initCotizaciones();
 
 </script>

@@ -28,7 +28,6 @@ const verifyToken = (req, res, next) => {
     req.token = token;
     next();
   } catch (error) {
-    console.error(error);
     res.cookie("banner_color", "warning", { maxAge: 2000 });
     res.cookie("notification", error.message, {
       maxAge: 2000,

@@ -27,42 +27,6 @@ const crearPDFCotizacion = async (input, res) => {
     path.join(__dirname, "..", "..", "views", "pdf", "cotizacion.hbs"),
     "utf8",
   );
-  const data = {
-    nro_cot: Intl.NumberFormat().format(1).padStart(3, "0"),
-    client: {
-      date: new Date().toLocaleDateString("es-CL"),
-      person: "Jonathan León",
-      name: "Warnermedia Chile Inversiones Limitada",
-      position: "Contralor",
-      address: "Pedro Montt 2354",
-      phone: "+56964041248",
-      city: "Santiago",
-      email: "jonathan.leon@wbd.com",
-      rut: "76109205-7",
-    },
-    detalles: [
-      {
-        line: 1,
-        qty: 100,
-        description:
-          "Lanyard de 90x2,5 cms cinta sublimada ambas caras, con mosqueton simple",
-        price: formatToCLP(2900),
-        total: formatToCLP(100 * 2900),
-      },
-    ],
-    totales: {
-      total_neto: formatToCLP(100 * 2900),
-      impuesto: formatToCLP(100 * 2900 * 0.1525),
-      total: formatToCLP(100 * 2900 + 100 * 2900 * 0.1525),
-    },
-    consideraciones: {
-      tipo_pago: "Crédito 30 días",
-      plazo_entrega: "15 días hábiles",
-      tipo_moneda: "Peso chileno",
-      fecha_valida: "10 días hábiles",
-      comentarios: "Algunos comentarios",
-    },
-  };
   const template = handlebars.compile(html);
   const htmlRender = template(input);
 
@@ -103,8 +67,11 @@ const crearPDFCotizacion = async (input, res) => {
     // const pdfNode = await import("pdf-node");
     // const result = await pdfNode.generatePDF(document);
 
+    const filename = `Cot-${input.client.name}-${String(
+      input.nro_cot,
+    ).padStart(3, "0")}`;
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", 'inline; filename="MyFile.pdf"');
+    res.setHeader("Content-Disposition", `inline; filename=${filename}.pdf`);
     res.setHeader("Content-Length", pdfBuffer.byteLength);
     return res.send(pdfBuffer);
   } catch (error) {

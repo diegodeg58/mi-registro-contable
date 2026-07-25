@@ -35,6 +35,12 @@ router.get("/:id", async (req, res) => {
 
 router.get("/:id/pdf", async (req, res) => {
   let cot = await model.getFullCotizacionByID(req.params.id);
+  const neto = cot.details.reduce((prev, curr) => {
+    return prev + curr.qty * curr.price;
+  }, 0);
+  const total = neto * (100 / (100 - 15.25));
+  const impuesto = total - neto;
+
   cot = {
     nro_cot: String(cot.correlativo).padStart(3, "0"),
     client: {
@@ -57,21 +63,9 @@ router.get("/:id/pdf", async (req, res) => {
       return obj;
     }),
     totales: {
-      total_neto: formatToCLP(
-        cot.details.reduce((prev, curr) => {
-          return prev + curr.qty * curr.price;
-        }, 0),
-      ),
-      impuesto: formatToCLP(
-        cot.details.reduce((prev, curr) => {
-          return prev + curr.qty * curr.price;
-        }, 0) * 0.1525,
-      ),
-      total: formatToCLP(
-        cot.details.reduce((prev, curr) => {
-          return prev + curr.qty * curr.price;
-        }, 0) * 1.1525,
-      ),
+      total_neto: formatToCLP(neto),
+      impuesto: formatToCLP(impuesto),
+      total: formatToCLP(total),
     },
     consideraciones: {
       tipo_pago: cot.pay_method,
